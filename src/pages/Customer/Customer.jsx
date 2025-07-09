@@ -57,7 +57,7 @@ const Customer = () => {
 
   <ul className="menu bg-white text-base-content min-h-full w-72 p-4 overflow-y-auto">
     <img
-      src="https://i.ibb.co/6R7N010X/Logo-transparent.png"
+      src="https://i.ibb.co/Fkwr6fBV/IMG-7276-removebg-preview.png"
       alt="Logo"
       className="w-[150px] mx-auto mb-5"
     />
