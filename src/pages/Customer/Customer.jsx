@@ -9,7 +9,7 @@ import { RiMenu2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import { SlHome } from "react-icons/sl";
 import { VscSignOut } from "react-icons/vsc";
 import { NavLink } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { FaChartBar, FaHome } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 
 const menuItems = [
@@ -25,6 +25,7 @@ const menuItems = [
 
 const Customer = () => {
   const [midwayStops, setMidwayStops] = useState([""]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleAddStop = () => {
     setMidwayStops([...midwayStops, ""]);
@@ -39,7 +40,7 @@ const Customer = () => {
     <div className="min-h-screen bg-white font-sans overflow-x-hidden">
      
            {/* Nav Icon - Left */}
-           <div className="drawer absolute top-4 left-4 lg:left-16 z-50 w-fit">
+           <div className="drawer absolute top-4 left-4 lg:left-16 z-50 w-fit hidden md:block">
   <input id="my-drawer" type="checkbox" className="drawer-toggle" />
   <div className="drawer-content">
     {/* Page content here */}
@@ -93,6 +94,107 @@ const Customer = () => {
 
 
 </div>
+
+{/* Mobile Bottom Navigation */}
+<div className="fixed bottom-0 left-0 right-0 bg-white shadow border-t border-gray-200 md:hidden z-50">
+  <div className="flex justify-between items-center px-6 py-2">
+    <NavLink
+      to="/"
+      className={({ isActive }) =>
+        `flex flex-col items-center text-sm ${
+          isActive ? "text-blue-600" : "text-gray-500"
+        }`
+      }
+    >
+      <SlHome className="text-2xl" />
+      <span>Home</span>
+    </NavLink>
+
+    <NavLink
+        to="/dashboard"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-sm ${
+            isActive ? "text-blue-600" : "text-gray-500"
+          }`
+        }
+      >
+        <FaChartBar  className="text-xl" />
+        <span className="text-xs mt-1">Dashboard</span>
+      </NavLink>
+
+    <NavLink
+      to="/dashboard/task"
+      className={({ isActive }) =>
+        `flex flex-col items-center text-sm ${
+          isActive ? "text-blue-600" : "text-gray-500"
+        }`
+      }
+    >
+      <FaPencil className="text-2xl" />
+      <span>Task</span>
+    </NavLink>
+
+    <NavLink
+      to="/dashboard/chat"
+      className={({ isActive }) =>
+        `flex flex-col items-center text-sm ${
+          isActive ? "text-blue-600" : "text-gray-500"
+        }`
+      }
+    >
+      <BsChatLeftDots className="text-2xl" />
+      <span>Chat</span>
+    </NavLink>
+
+    {/* Avatar Dropdown */}
+    <div className="relative group">
+      <div className="cursor-pointer flex flex-col items-center text-sm text-gray-500" onClick={() => setShowDropdown(!showDropdown)}>
+        <img
+          src="https://i.ibb.co/8Yq3w5b/avatar-icon.png" // Replace with actual avatar or icon
+          alt="Avatar"
+          className="w-7 h-7 rounded-full"
+        />
+        <span>More</span>
+      </div>
+
+      {/* Dropdown */}
+      {showDropdown && (
+  <div className="absolute bottom-12 right-0 w-44 bg-white border rounded-lg shadow-lg p-2 space-y-1 z-50">
+    <NavLink
+      to="/dashboard/wallet"
+      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-sm"
+    >
+      <BiWalletAlt className="text-blue-500 text-lg" />
+      Wallet
+    </NavLink>
+    <NavLink
+      to="/dashboard/support"
+      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-sm"
+    >
+      <BiSupport className="text-green-600 text-lg" />
+      Support
+    </NavLink>
+    <NavLink
+      to="/dashboard/orders"
+      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-sm"
+    >
+      <RiMenuUnfold2Line className="text-orange-500 text-lg" />
+      Orders
+    </NavLink>
+    <NavLink
+      to="/logout"
+      className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-gray-100 rounded-md text-sm"
+    >
+      <VscSignOut className="text-red-600 text-lg" />
+      Sign Out
+    </NavLink>
+  </div>
+)}
+
+    </div>
+  </div>
+</div>
+
       {/* Top section */}
       <div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative ">
         <div className="bg-[#f8f8f8] overflow-hidden md:h-[504px]">
