@@ -390,7 +390,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 md:hidden mt-10 pl-5">
+        <div className="flex items-center gap-2 md:hidden mt-3 pl-5">
               <span className="text-sm font-medium">John Doe</span>
               <div className="avatar avatar-online">
                 <img
