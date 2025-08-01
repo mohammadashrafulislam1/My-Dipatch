@@ -8,5 +8,9 @@ export default {
   theme: {
     extend: {},
   },
+  darkMode: "class", // 👈 ADD THIS LINE
   plugins: [daisyui], // Add DaisyUI here
+  daisyui: {
+    themes: ["light", "dark"], // or customize further
+  },
 }

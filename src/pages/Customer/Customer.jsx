@@ -9,7 +9,7 @@ import { RiMenu2Line, RiMenuUnfold2Line } from "react-icons/ri";
 import { SlHome } from "react-icons/sl";
 import { VscSignOut } from "react-icons/vsc";
 import { NavLink } from "react-router-dom";
-import { FaChartBar, FaHome } from "react-icons/fa";
+import { FaChartBar, FaHome, FaTimes } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 
 const menuItems = [
@@ -29,6 +29,10 @@ const Customer = () => {
 
   const handleAddStop = () => {
     setMidwayStops([...midwayStops, ""]);
+  };
+
+  const handleRemoveStop = (index) => {
+    setMidwayStops(midwayStops.filter((_, idx) => idx !== index));
   };
 
   const handleStopChange = (index, value) => {
@@ -71,7 +75,7 @@ const Customer = () => {
           key={path}
           to={path}
           className={({ isActive }) =>
-            `menu-items poppins-regular flex gap-2 items-center mb-[2px] ${
+            `menu-items poppins-regular text-black  dark:text-black flex gap-2 items-center mb-[2px] ${
               isActive ? "bg-[#006eff2a] text-[#006FFF]" : ""
             }`
           }
@@ -231,16 +235,16 @@ const Customer = () => {
         </div>
         {/* Right Column (Form) */}
         <div className="bg-white w-full rounded-2xl shadow-md p-6 md:p-8 ml-auto md:w-[40%] mb-[-150px] !z-10">
-      <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6">Book an Errand</h2>
+      <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6 ">Book an Errand</h2>
 
-      <form className="space-y-4">
+      <form className="space-y-4 dark:text-white" >
         {/* Pickup Location */}
         <div className="relative">
           <MapPinIcon className="w-5 h-5 text-orange-500 absolute left-3 top-3.5" />
           <input
             type="text"
             placeholder="Pickup Location"
-            className="w-full border border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full dark:bg-white border border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -250,21 +254,31 @@ const Customer = () => {
           <input
             type="text"
             placeholder="Drop-off Location"
-            className="w-full border border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border dark:bg-white border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        {/* Midway Stops */}
-        {midwayStops.map((stop, index) => (
+       {/* Midway Stops */}
+      {midwayStops.map((stop, index) => (
+        <div key={index} className="flex items-center gap-2">
           <input
-            key={index}
             type="text"
             value={stop}
             onChange={(e) => handleStopChange(index, e.target.value)}
             placeholder={`Midway Stop ${index + 1}`}
-            className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border dark:bg-white border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        ))}
+          <button
+            type="button"
+            onClick={() => handleRemoveStop(index)}
+            className="text-red-500 hover:text-red-700 p-1 rounded-full"
+            aria-label={`Remove Midway Stop ${index + 1}`}
+          >
+            <FaTimes />
+          </button>
+        </div>
+      ))}
+
 
         {/* Add Midway Stop */}
         <button
@@ -279,7 +293,7 @@ const Customer = () => {
         {/* Message Box */}
         <textarea
           placeholder="Message/Instructions"
-          className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border dark:bg-white border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           rows="3"
         ></textarea>
 

@@ -107,7 +107,7 @@ const Chat = () => {
               >
                 <IoArrowBackOutline />
               </button>
-              Chat with {selectedUser.name}
+              Chat with <b>{selectedUser.name}</b>
             </div>
 
             {/* Messages */}
