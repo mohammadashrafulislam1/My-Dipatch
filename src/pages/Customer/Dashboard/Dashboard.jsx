@@ -75,8 +75,6 @@ const Dashboard = () => {
     { path: "chat", label: "Chat", icon: <BsChatLeftDots /> },
     { path: "wallet", label: "Wallet", icon: <BiWalletAlt /> },
     { path: "support", label: "Support", icon: <BiSupport /> },
-    { type: "divider" },  // special entry to render a divider
-    { path: "/", label: "Home", icon: <FaHome /> },
   ];
   
 

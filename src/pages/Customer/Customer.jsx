@@ -19,8 +19,6 @@ const menuItems = [
   { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
   { path: "/dashboard/wallet", label: "Wallet", icon: <BiWalletAlt /> },
   { path: "/dashboard/support", label: "Support", icon: <BiSupport /> },
-  { type: "divider" }, // special item
-  { path: "/", label: "Home", icon: <FaHome /> },
 ];
 
 const Customer = () => {
@@ -86,13 +84,15 @@ const Customer = () => {
       )
     )}
 
-    <NavLink
-      to="/logout"
-      className="pl-[12px] pt-[6px] poppins-regular flex gap-2 items-center"
-    >
-      <VscSignOut className="text-[16px]" />
-      Sign Out
-    </NavLink>
+<div className="divider mt-6 mb-2" />
+        <NavLink
+          to="/logout"
+          className="flex items-center gap-2 text-gray-700 px-3 py-2 hover:bg-gray-100 rounded-md"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <VscSignOut className="text-[16px]" />
+          Sign Out
+        </NavLink>
   </ul>
 </div>
 
@@ -185,15 +185,13 @@ const Customer = () => {
       <RiMenuUnfold2Line className="text-orange-500 text-lg" />
       Orders
     </NavLink>
-    <div className="divider mt-6 mb-2" />
-        <NavLink
-          to="/logout"
-          className="flex items-center gap-2 text-gray-700 px-3 py-2 hover:bg-gray-100 rounded-md"
-          // onClick={() => setSidebarOpen(false)}
-        >
-          <VscSignOut className="text-[16px]" />
-          Sign Out
-        </NavLink>
+    <NavLink
+      to="/logout"
+      className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-gray-100 rounded-md text-sm"
+    >
+      <VscSignOut className="text-red-600 text-lg" />
+      Sign Out
+    </NavLink>
   </div>
 )}
 
