@@ -14,7 +14,7 @@ import { FaPencil } from "react-icons/fa6";
 
 const menuItems = [
   { path: "/dashboard", label: "Dashboard", icon: <SlHome /> },
-  { path: "/dashboard/task", label: "New Task", icon: <FaPencil /> },
+  { path: "/", label: "New Task", icon: <FaPencil /> },
   { path: "/dashboard/orders", label: "Order Lists", icon: <RiMenuUnfold2Line /> },
   { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
   { path: "/dashboard/wallet", label: "Wallet", icon: <BiWalletAlt /> },
@@ -127,7 +127,7 @@ const Customer = () => {
       </NavLink>
 
     <NavLink
-      to="/dashboard/task"
+      to="/"
       className={({ isActive }) =>
         `flex flex-col items-center text-sm ${
           isActive ? "text-blue-600" : "text-gray-500"
