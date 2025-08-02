@@ -185,13 +185,15 @@ const Customer = () => {
       <RiMenuUnfold2Line className="text-orange-500 text-lg" />
       Orders
     </NavLink>
-    <NavLink
-      to="/logout"
-      className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-gray-100 rounded-md text-sm"
-    >
-      <VscSignOut className="text-red-600 text-lg" />
-      Sign Out
-    </NavLink>
+    <div className="divider mt-6 mb-2" />
+        <NavLink
+          to="/logout"
+          className="flex items-center gap-2 text-gray-700 px-3 py-2 hover:bg-gray-100 rounded-md"
+          // onClick={() => setSidebarOpen(false)}
+        >
+          <VscSignOut className="text-[16px]" />
+          Sign Out
+        </NavLink>
   </div>
 )}
 
