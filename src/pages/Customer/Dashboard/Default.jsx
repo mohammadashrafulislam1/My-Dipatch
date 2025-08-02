@@ -33,7 +33,7 @@ const Default = () => {
   };
 
   return (
-    <div className="p-6 bg-[#f9f9f9] min-h-screen">
+    <div className="p-6 bg-[#fff] min-h-screen">
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[
