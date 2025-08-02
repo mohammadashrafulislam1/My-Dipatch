@@ -70,7 +70,7 @@ const Dashboard = () => {
 
   const menuItems = [
     { path: "/dashboard", label: "Dashboard", icon: <SlHome /> },
-    { path: "task", label: "New Task", icon: <FaPencil /> },
+    { path: "/", label: "New Task", icon: <FaPencil /> },
     { path: "orders", label: "Order Lists", icon: <RiMenuUnfold2Line /> },
     { path: "chat", label: "Chat", icon: <BsChatLeftDots /> },
     { path: "wallet", label: "Wallet", icon: <BiWalletAlt /> },
@@ -162,7 +162,7 @@ const Dashboard = () => {
       </NavLink>
 
     <NavLink
-      to="/dashboard/task"
+      to="/"
       className={({ isActive }) =>
         `flex flex-col items-center text-sm ${
           isActive ? "text-blue-600" : "text-gray-500"
