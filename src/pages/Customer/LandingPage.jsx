@@ -65,7 +65,7 @@ const LandingPage = () => {
 
   const profileMenuItems = [
     { path: "/dashboard/profile", label: "Manage Account", icon: <FaUser /> },
-    { path: "/", label: "New Task", icon: <FaPencil /> },
+    { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
     { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
     { path: "/dashboard/settings", label: "Settings", icon: <FiSettings /> }
   ];
