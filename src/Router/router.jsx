@@ -12,6 +12,8 @@ import Notification from "../pages/Customer/Profile/Notification";
 import Customer from "../pages/Customer/Customer";
 import Support from "../pages/Customer/Dashboard/Support";
 import Task from "../pages/Customer/Dashboard/Task";
+import LandingPage from "../pages/Customer/LandingPage";
+import AccountPage from "../pages/Customer/Account";
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +62,16 @@ export const router = createBrowserRouter([
     {
         path:'/',
         element:<Customer/>,
+        errorElement:<h1>err</h1>
+    },
+    {
+        path:'/landingpage',
+        element:<LandingPage/>,
+        errorElement:<h1>err</h1>
+    },
+    {
+        path:'/account',
+        element:<AccountPage/>,
         errorElement:<h1>err</h1>
     },
     {

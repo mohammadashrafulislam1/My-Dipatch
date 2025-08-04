@@ -29,6 +29,7 @@ import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { TfiAlignLeft } from "react-icons/tfi";
 import { VscSignOut } from "react-icons/vsc";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import BottomNavigation from "../../../Components/BottomNavigation";
 
 const notifications = [
   { id: 1, text: "You have a new message from Alex.", timeAgo: "2h ago" },
@@ -76,7 +77,6 @@ const Dashboard = () => {
     { path: "wallet", label: "Wallet", icon: <BiWalletAlt /> },
     { path: "support", label: "Support", icon: <BiSupport /> },
   ];
-  
 
   return (
     <div className="flex w-full overflow-hidden text-black dark:text-black ">
@@ -133,104 +133,7 @@ const Dashboard = () => {
       </div>
 
    {/* Mobile Bottom Navigation */}
-<div className="fixed bottom-0 left-0 right-0 bg-white shadow border-t border-gray-200 md:hidden z-50">
-  <div className="flex justify-between items-center px-6 py-2">
-    <NavLink
-      to="/"
-      className={({ isActive }) =>
-        `flex flex-col items-center text-sm ${
-          isActive ? "text-blue-600" : "text-gray-500"
-        }`
-      }
-    >
-      <SlHome className="text-2xl" />
-      <span>Home</span>
-    </NavLink>
-
-      <NavLink
-        to="/dashboard"
-        className={({ isActive }) =>
-          `flex flex-col items-center text-sm ${
-            isActive ? "text-blue-600" : "text-gray-500"
-          }`
-        }
-      >
-        <FaChartBar  className="text-xl" />
-        <span className="text-xs mt-1">Dashboard</span>
-      </NavLink>
-
-    <NavLink
-      to="/"
-      className={({ isActive }) =>
-        `flex flex-col items-center text-sm ${
-          isActive ? "text-blue-600" : "text-gray-500"
-        }`
-      }
-    >
-      <FaPencil className="text-2xl" />
-      <span>Task</span>
-    </NavLink>
-
-    <NavLink
-      to="/dashboard/chat"
-      className={({ isActive }) =>
-        `flex flex-col items-center text-sm ${
-          isActive ? "text-blue-600" : "text-gray-500"
-        }`
-      }
-    >
-      <BsChatLeftDots className="text-2xl" />
-      <span>Chat</span>
-    </NavLink>
-
-    {/* Avatar Dropdown */}
-    <div className="relative group">
-      <div className="cursor-pointer flex flex-col items-center text-sm text-gray-500" onClick={() => setShowDropdown(!showDropdown)}>
-        <img
-          src="https://i.ibb.co/8Yq3w5b/avatar-icon.png" // Replace with actual avatar or icon
-          alt="Avatar"
-          className="w-7 h-7 rounded-full"
-        />
-        <span>More</span>
-      </div>
-
-      {/* Dropdown */}
-      {showDropdown && (
-  <div className="absolute bottom-12 right-0 w-44 bg-white border rounded-lg shadow-lg p-2 space-y-1 z-50">
-    <NavLink
-      to="/dashboard/wallet"
-      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-sm"
-    >
-      <BiWalletAlt className="text-blue-500 text-lg" />
-      Wallet
-    </NavLink>
-    <NavLink
-      to="/dashboard/support"
-      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-sm"
-    >
-      <BiSupport className="text-green-600 text-lg" />
-      Support
-    </NavLink>
-    <NavLink
-      to="/dashboard/orders"
-      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md text-sm"
-    >
-      <RiMenuUnfold2Line className="text-orange-500 text-lg" />
-      Orders
-    </NavLink>
-    <NavLink
-      to="/logout"
-      className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-gray-100 rounded-md text-sm"
-    >
-      <VscSignOut className="text-red-600 text-lg" />
-      Sign Out
-    </NavLink>
-  </div>
-)}
-
-    </div>
-  </div>
-</div>
+<BottomNavigation/>
 
 
 {showNotifications && (
