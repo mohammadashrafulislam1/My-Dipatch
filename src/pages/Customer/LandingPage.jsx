@@ -56,7 +56,7 @@ const LandingPage = () => {
   };
 
   const menuItems = [
-    { path: "/", label: "New Task", icon: <FaPencil /> },
+    { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
     { path: "/dashboard/orders", label: "Orders", icon: <RiMenuUnfold2Line /> },
     { path: "/dashboard/support", label: "Support", icon: <BiSupport /> },
     { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
