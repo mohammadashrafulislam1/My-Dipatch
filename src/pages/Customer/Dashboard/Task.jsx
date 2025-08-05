@@ -15,7 +15,7 @@ const Task = () => {
   };
 
   return (
-    <div className="min-h-screen mx-auto flex justify-center items-center bg-[#f9fafb] dark:bg-white px-4 py-12">
+    <div className="min-h-screen mx-auto flex justify-center items-center dark:bg-white px-4 py-12">
   <div className="bg-white dark:bg-gray-100 w-full rounded-2xl shadow-md p-6 md:p-8 mx-auto md:w-[50%] !z-10">
     <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6">Book an Errand</h2>
 

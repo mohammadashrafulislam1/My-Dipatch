@@ -12,7 +12,7 @@ const Wallet = () => {
   const balance = 120; // You can replace this with dynamic data later
 
   return (
-    <div className="min-h-screen bg-[#f9fafb] px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6">
         {/* Wallet Header */}
         <div className="flex items-center gap-4 mb-8">

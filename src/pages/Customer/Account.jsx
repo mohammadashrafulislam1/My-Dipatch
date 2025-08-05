@@ -78,15 +78,16 @@ const ActionCard = ({ icon, label, badgeCount, path }) => (
 );
 
 const OptionRow = ({ icon, label, path }) => (
-  <div className="flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-    <NavLink to={path}>
+  <NavLink to={path} className="flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+  <div >
+   
     <div className="flex items-center gap-3">
       {icon}
       <span className="font-medium">{label}</span>
     </div>
-    </NavLink>
     <i className="fas fa-chevron-right text-gray-400" />
-  </div>
+   
+  </div> </NavLink>
 );
 
 export default AccountPage;

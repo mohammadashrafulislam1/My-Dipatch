@@ -3,7 +3,7 @@ import { FaHeadset, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
 const Support = () => {
   return (
-    <div className="min-h-screen bg-[#f9fafb] p-2 md:p-10">
+    <div className="min-h-screen p-2 md:p-10 mt-6 md:mt-0">
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-8">
         <div className="text-center mb-8">
           <FaHeadset className="text-4xl text-blue-600 mx-auto mb-2" />

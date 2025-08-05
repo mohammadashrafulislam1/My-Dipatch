@@ -77,7 +77,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden md:pb-0 pb-12">
       {/* Top Navigation Bar */}
       <div className="hidden md:flex fixed top-0 left-0 right-0 bg-white shadow-md z-40 h-16 items-center px-12 gap-6">
         <img
@@ -460,8 +460,6 @@ rounded-2xl border border-2 p-6  ">
   </div>
 </div>
 
-
-
 {/* Support Section */}
 <div className="bg-gray-50 py-16 px-6 lg:px-20 text-center">
   <h2 className="text-4xl font-bold text-blue-900 mb-4">We're Here to Help</h2>
@@ -485,6 +483,7 @@ rounded-2xl border border-2 p-6  ">
 </div>
 </div>
 
+{/* How It Works Section */}
 <div className="bg-white py-16 px-6 lg:px-20 text-center">
   <h2 className="text-4xl font-bold text-blue-900 mb-6">How It Works</h2>
   <div className="grid md:grid-cols-4 gap-8 mt-8">
@@ -543,6 +542,7 @@ rounded-2xl border border-2 p-6  ">
   </div>
 </div>
 
+{/* Ready to Book Section */}
 <div className="bg-blue-900 text-white text-center py-16 px-6 lg:px-20">
   <h2 className="text-4xl font-bold mb-4">Ready to Book Your First Errand?</h2>
   <p className="text-lg mb-8">Get started in seconds. Safe, fast & reliable services await!</p>
@@ -556,7 +556,7 @@ rounded-2xl border border-2 p-6  ">
   </button>
 </div>
 
-
+{/* FAQs Section */}
 <div className="bg-gray-100 py-16 px-6 lg:px-20">
   <h2 className="text-4xl font-bold text-blue-900 text-center mb-10">Frequently Asked Questions</h2>
   <div className="max-w-3xl mx-auto space-y-6">
@@ -613,7 +613,8 @@ rounded-2xl border border-2 p-6  ">
 
 </div>
 
-<footer className="bg-gray-900 text-white pt-12 pb-6 px-6 md:px-20">
+{/* footer Section */}
+<footer className="bg-blue-900 text-white pt-12 pb-6 px-6 md:px-20">
   <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
     {/* Brand & Description */}
     <div>
@@ -623,7 +624,7 @@ rounded-2xl border border-2 p-6  ">
           className="w-24 object-contain filter brightness-0 invert"
         />
       <p className="text-gray-400 text-sm">
-        Your trusted ride-sharing partner — fast, safe, and reliable rides at your fingertips.
+      Book a driver. We pick up. We deliver. You relax. Fast, reliable delivery and errands made easy.
       </p>
     </div>
 
