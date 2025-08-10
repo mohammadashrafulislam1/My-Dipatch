@@ -1,0 +1,1 @@
+export const endPoint ='https://my-dipatch-backend.vercel.app/api';

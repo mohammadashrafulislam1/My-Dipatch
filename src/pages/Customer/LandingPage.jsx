@@ -24,6 +24,7 @@ import {
 import { RiMenuUnfold2Line } from "react-icons/ri";
 import { FaPencil } from "react-icons/fa6";
 import { MapPinIcon, PlusIcon } from "lucide-react";
+import RideRequestForm from "../../Components/RideRequestForm";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -253,74 +254,7 @@ const LandingPage = () => {
           }}>
       <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6 ">Book an Errand</h2>
 
-      <form className="space-y-4 dark:text-white" >
-        {/* Pickup Location */}
-        <div className="relative">
-          <MapPinIcon className="w-5 h-5 text-orange-500 absolute left-3 top-3.5" />
-          <input
-            type="text"
-            placeholder="Pickup Location"
-            className="w-full dark:bg-white border border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Drop-off Location */}
-        <div className="relative">
-          <MapPinIcon className="w-5 h-5 text-blue-600 absolute left-3 top-3.5" />
-          <input
-            type="text"
-            placeholder="Drop-off Location"
-            className="w-full border dark:bg-white border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-       {/* Midway Stops */}
-      {midwayStops.map((stop, index) => (
-        <div key={index} className="flex items-center gap-2">
-          <input
-            type="text"
-            value={stop}
-            onChange={(e) => handleStopChange(index, e.target.value)}
-            placeholder={`Midway Stop ${index + 1}`}
-            className="w-full border dark:bg-white border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="button"
-            onClick={() => handleRemoveStop(index)}
-            className="text-red-500 hover:text-red-700 p-1 rounded-full"
-            aria-label={`Remove Midway Stop ${index + 1}`}
-          >
-            <FaTimes />
-          </button>
-        </div>
-      ))}
-
-
-        {/* Add Midway Stop */}
-        <button
-          type="button"
-          onClick={handleAddStop}
-          className="flex items-center hover:underline text-md text-gray-500 poppins-regular"
-        >
-          <PlusIcon className="w-5 h-5 mr-1 text-blue-600 text-xl font-bold" />
-          Add Midway Stop
-        </button>
-
-        {/* Message Box */}
-        <textarea
-          placeholder="Message/Instructions"
-          className="w-full border dark:bg-white border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows="3"
-        ></textarea>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl text-lg font-semibold"
-        >
-          Get Instant Quote
-        </button>
-      </form>
+      <RideRequestForm />
     </div>
       </div>
 
