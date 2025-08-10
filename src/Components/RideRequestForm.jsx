@@ -12,7 +12,7 @@ export default function RideRequestForm() {
   const [price, setPrice] = useState(0);
 
   // Temporary: Replace with logged-in user's ID
-  const customerId = "YOUR_CUSTOMER_ID";
+  const customerId = "688aef18de763ae87a994a39";
 
   const handleAddStop = () => setMidwayStops([...midwayStops, ""]);
   const handleRemoveStop = (index) => {
