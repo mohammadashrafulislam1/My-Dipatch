@@ -1,1 +1,1 @@
-export const endPoint ='https://my-dipatch-backend.vercel.app/api';
+export const endPoint ='http://localhost:3000/api';

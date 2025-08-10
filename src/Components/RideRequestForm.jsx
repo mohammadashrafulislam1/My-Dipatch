@@ -5,28 +5,32 @@ import { FaTimes } from "react-icons/fa";
 import { endPoint } from "./ForAPIs.js";
 
 export default function RideRequestForm() {
-  const [pickup, setPickup] = useState("");
-  const [dropoff, setDropoff] = useState("");
-  const [midwayStops, setMidwayStops] = useState([""]); // Default 1 midway stop
+    // Initialize state
+const [pickup, setPickup] = useState({ address: "", lat: 0, lng: 0 });
+const [dropoff, setDropoff] = useState({ address: "", lat: 0, lng: 0 });
+const [midwayStops, setMidwayStops] = useState([{ address: "", lat: 0, lng: 0 }]);
   const [instructions, setInstructions] = useState("");
   const [price, setPrice] = useState(0);
 
   // Temporary: Replace with logged-in user's ID
   const customerId = "688aef18de763ae87a994a39";
 
-  const handleAddStop = () => setMidwayStops([...midwayStops, ""]);
+  
+// When adding a stop, add an object, not a string
+const handleAddStop = () => setMidwayStops([...midwayStops, { address: "" }]);
   const handleRemoveStop = (index) => {
     setMidwayStops(midwayStops.filter((_, i) => i !== index));
   };
-  const handleStopChange = (index, value) => {
+  // For midwayStops change
+const handleStopChange = (index, value) => {
     const updated = [...midwayStops];
-    updated[index] = value;
+    updated[index] = { address: value };  // update with object, not string
     setMidwayStops(updated);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+   console.log(endPoint)
     try {
       const res = await axios.post(
         `${endPoint}/rides/request`,
@@ -56,8 +60,8 @@ export default function RideRequestForm() {
         <input
           type="text"
           placeholder="Pickup Location"
-          value={pickup}
-          onChange={(e) => setPickup(e.target.value)}
+          value={pickup.address}
+          onChange={(e) => setPickup({ address: e.target.value })}
           className="w-full dark:bg-white border border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -68,8 +72,8 @@ export default function RideRequestForm() {
         <input
           type="text"
           placeholder="Drop-off Location"
-          value={dropoff}
-          onChange={(e) => setDropoff(e.target.value)}
+          value={dropoff.address}
+          onChange={(e) => setDropoff({ address: e.target.value })}
           className="w-full border dark:bg-white border-gray-300 rounded-md pl-10 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -79,7 +83,7 @@ export default function RideRequestForm() {
         <div key={index} className="flex items-center gap-2">
           <input
             type="text"
-            value={stop}
+            value={stop.address}
             onChange={(e) => handleStopChange(index, e.target.value)}
             placeholder={`Midway Stop ${index + 1}`}
             className="w-full border dark:bg-white border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
