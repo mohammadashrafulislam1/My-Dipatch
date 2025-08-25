@@ -25,8 +25,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F9FF] px-4">
-      <div className="w-full max-w-md bg-white p-6 sm:p-4 rounded-2xl shadow-xl">
+    <div
+    className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
+    style={{
+      backgroundImage:
+        "url('https://sdmntpritalynorth.oaiusercontent.com/files/00000000-97c8-6246-abd3-8718b97fb526/raw?se=2025-08-25T20%3A45%3A36Z&sp=r&sv=2024-08-04&sr=b&scid=0585c349-d60d-58f9-9600-cdf8e72c08cc&skoid=0da8417a-a4c3-4a19-9b05-b82cee9d8868&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-08-25T19%3A45%3A24Z&ske=2025-08-26T19%3A45%3A24Z&sks=b&skv=2024-08-04&sig=LPSNxvt89P0Rf5o7QRRn2wf8SrIDt47HQSbjnD9R0U4%3D')",
+    }}
+  >
+      <div className="w-full max-w-md bg-white p-8 sm:p-4 rounded-2xl shadow-xl">
         <img
           src="https://i.ibb.co/TxC947Cw/thumbnail-Image-2025-07-09-at-2-10-AM-removebg-preview.png"
           alt="Logo"
