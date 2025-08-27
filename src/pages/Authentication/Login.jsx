@@ -4,10 +4,12 @@ import { FaFacebookF } from "react-icons/fa";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import { endPoint } from "../../Components/ForAPIs";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -15,42 +17,47 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setLoading(true);
+
     try {
       const response = await axios.post(
-        `${endPoint}/user/login`, // replace with your backend URL
+        `${endPoint}/user/login`,
         formData,
-        {
-          withCredentials: true, // important to send HttpOnly cookie
-        }
+        { withCredentials: true }
       );
-  
+
+      toast.success("Logged in successfully 🎉");
       console.log("Login success:", response.data);
-  
-      // Optional: redirect to dashboard/homepage
+
+      // Optional: redirect
       // window.location.href = "/dashboard";
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Login failed");
-    }}
-
-  const handleGoogleLogin = () => {
-    console.log("Login with Google");
+      toast.error(error.response?.data?.message || "Login failed ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleFacebookLogin = () => {
-    console.log("Login with Facebook");
-  };
+  const handleGoogleLogin = () => toast("Google login coming soon 🚀");
+  const handleFacebookLogin = () => toast("Facebook login coming soon 🚀");
 
   return (
     <div
-    className="min-h-screen flex items-center justify-center bg-cover bg-center px-4 bg-no-repeat py-20"
-    style={{
-      backgroundImage:
-        "url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1756262884/localRun/Assets/Gemini_Generated_Image_geij8qgeij8qgeij_iqy1tr.png')",
-    }}
-  >
-      <div className="w-full max-w-md bg-white p-8 sm:p-4 rounded-2xl shadow-xl">
+      className="min-h-screen flex items-center justify-center bg-cover bg-center px-4 bg-no-repeat py-20"
+      style={{
+        backgroundImage:
+          "url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1756262884/localRun/Assets/Gemini_Generated_Image_geij8qgeij8qgeij_iqy1tr.png')",
+      }}
+    >
+      <Toaster position="top-right" />
+      <div className="w-full max-w-md bg-white p-8 sm:p-4 rounded-2xl shadow-xl relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-2xl z-10">
+            <div className="w-10 h-10 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+
         <img
           src="https://i.ibb.co/TxC947Cw/thumbnail-Image-2025-07-09-at-2-10-AM-removebg-preview.png"
           alt="Logo"
@@ -61,7 +68,6 @@ const Login = () => {
           Login to Your Account
         </h2>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -93,20 +99,19 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#008000] text-white py-2 rounded-full font-semibold hover:bg-green-700 transition text-sm sm:text-base"
+            disabled={loading}
+            className="w-full bg-[#008000] text-white py-2 rounded-full font-semibold hover:bg-green-700 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center my-4">
           <div className="flex-1 h-px bg-gray-300" />
           <span className="px-3 text-sm text-gray-500">or</span>
           <div className="flex-1 h-px bg-gray-300" />
         </div>
 
-        {/* Social Login Buttons */}
         <div className="space-y-3">
           <button
             onClick={handleGoogleLogin}
@@ -125,7 +130,6 @@ const Login = () => {
           </button>
         </div>
 
-        {/* Extra Links */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Don’t have an account?{" "}
           <a href="/signup" className="text-[#006FFF] font-medium hover:underline">
