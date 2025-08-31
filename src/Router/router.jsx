@@ -14,6 +14,7 @@ import Support from "../pages/Customer/Dashboard/Support";
 import Task from "../pages/Customer/Dashboard/Task";
 import LandingPage from "../pages/Customer/LandingPage";
 import AccountPage from "../pages/Customer/Account";
+import PrivateRoute from "./PrivateRouter";
 
 export const router = createBrowserRouter([
     {
@@ -27,35 +28,35 @@ export const router = createBrowserRouter([
             },
             {
                 path:'orders',
-                element:<Order/>
+                element:<PrivateRoute><Order/></PrivateRoute>
             },
             {
                 path:'task',
-                element:<Task/>
+                element:<PrivateRoute><Task/></PrivateRoute>
             },
             {
                 path:'chat',
-                element:<Chat/>
+                element:<PrivateRoute><Chat/></PrivateRoute>
             },
             {
                 path:'support',
-                element:<Support/>
+                element:<PrivateRoute><Support/></PrivateRoute>
             },
             {
                 path:'wallet',
-                element:<Wallet/>
+                element:<PrivateRoute><Wallet/></PrivateRoute>
             },
             {
                 path:'profile',
-                element:<Profile/>
+                element:<PrivateRoute><Profile/></PrivateRoute>
             },
             {
                 path:'settings',
-                element:<Settings/>
+                element:<PrivateRoute><Settings/></PrivateRoute>
             },
             {
                 path:'notifications',
-                element:<Notification/>
+                element:<PrivateRoute><Notification/></PrivateRoute>
             },
         ]
     },
@@ -66,7 +67,7 @@ export const router = createBrowserRouter([
     },
     {
         path:'/account',
-        element:<AccountPage/>,
+        element:<PrivateRoute><AccountPage/></PrivateRoute>,
         errorElement:<h1>err</h1>
     },
     {

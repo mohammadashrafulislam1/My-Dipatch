@@ -28,7 +28,7 @@ import RideRequestForm from "../../Components/RideRequestForm";
 import useAuth from "../../Components/useAuth";
 
 const LandingPage = () => {
-  const { user, loading } = useAuth();
+  const { user, logout, loading } = useAuth();
   console.log(user)
   const navigate = useNavigate();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -52,6 +52,15 @@ const LandingPage = () => {
   const handleRemoveStop = (index) => {
     setMidwayStops(midwayStops.filter((_, idx) => idx !== index));
   };
+  const handleLogout = async () => {
+    try {
+      await logout();          // Call your existing logout function
+      window.location.href = "/"; // Full page reload to landing page
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
 
   const handleStopChange = (index, value) => {
     const updatedStops = [...midwayStops];
@@ -135,10 +144,25 @@ const LandingPage = () => {
         </div>
 
         {showProfileDropdown && (
-          <div className="absolute right-0 mt-2 w-[300px] bg-white/80 backdrop-blur-xl shadow-2xl rounded-xl z-50 p-6">
-            {/* Notifications, Top Menu, Profile Navigation, Sign Out */}
-            {/* Keep your existing dropdown content here */}
-          </div>
+          <div className="absolute right-0 mt-2 w-[300px] bg-white/80 backdrop-blur-xl shadow-2xl rounded-xl z-50 p-6"> 
+          <div className="flex justify-center gap-3 mb-4"> 
+            <div onClick={() => navigate("/dashboard/notifications")} className="relative flex items-center justify-center bg-[#f0f8ff] w-12 h-12 hover:bg-[#e6f0ff] transition p-2 rounded-xl cursor-pointer text-[#006FFF] text-[20px]" > 
+              <FiBell /> 
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[14px] px-[5px] rounded-full border border-white">0</span> </div> 
+              </div> {/* Top Menu Cards */} <div className="grid grid-cols-3 gap-3 mb-4"> {topMenuItems.map(({ path, label, icon }, idx) => ( 
+                <div key={idx} onClick={() => navigate(path)} className="text-center text-sm p-3 rounded-lg border hover:shadow-md cursor-pointer" > {icon} 
+                <div className="mt-1">{label}</div> </div> ))} </div> {/* Profile Navigation */} 
+                <div className="flex flex-col gap-2"> {profileMenuItems.map(({ path, label, icon }, idx) => ( 
+                  <div key={idx} onClick={() => navigate(path)} className="flex items-center text-[17px] gap-3 text-sm text-gray-700 hover:text-black hover:border hover:shadow-md p-3 rounded-lg cursor-pointer" > {icon} {label} </div> ))} 
+                  </div> <div className="mt-4 border-t pt-3"> 
+                   <button
+  className="flex items-center gap-2 text-sm text-red-600 hover:underline"
+  onClick={handleLogout}
+  disabled={loading}
+>
+  {loading ? "Signing Out..." : <><FaSignOutAlt /> Sign Out</>}
+</button>
+ </div> </div>
         )}
       </>
     ) : (
