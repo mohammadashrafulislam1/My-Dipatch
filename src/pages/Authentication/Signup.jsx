@@ -3,6 +3,7 @@ import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import { FaUser, FaCity, FaEnvelope, FaPhone, FaLock, FaImage } from "react-icons/fa";
 import axios from "axios";
 import { endPoint } from "../../Components/ForAPIs";
+import toast, { Toaster } from "react-hot-toast";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -52,11 +53,11 @@ const Signup = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Signup successful!");
+      toast.success("Signup successful! 🎉");
       console.log("User:", data);
     } catch (err) {
-      console.error("Signup error:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Error signing up");
+      console.error("Signup error:", err.response?.data?.error || err.message);
+      toast.error(err.response?.data?.error || "Error signing up ❌");
     }
   };
 
@@ -68,6 +69,8 @@ const Signup = () => {
         "url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1756262884/localRun/Assets/Gemini_Generated_Image_geij8qgeij8qgeij_iqy1tr.png')",
     }}
   >
+      <Toaster position="top-right" />
+
       <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 my-5">
         <div className="text-center mb-6">
           <img

@@ -51,7 +51,7 @@ const Login = () => {
       }}
     >
       <Toaster position="top-right" />
-      <div className="w-full max-w-md bg-white p-8 sm:p-4 rounded-2xl shadow-xl relative">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 my-5">
         {loading && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-2xl z-10">
             <div className="w-10 h-10 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
@@ -115,7 +115,7 @@ const Login = () => {
         <div className="space-y-3">
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-full py-2 text-sm font-medium hover:bg-gray-50"
+            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-full py-2 text-sm font-medium bg-gray-50"
           >
             <FcGoogle className="text-xl" />
             Continue with Google
@@ -123,7 +123,7 @@ const Login = () => {
 
           <button
             onClick={handleFacebookLogin}
-            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-full py-2 text-sm font-medium text-[#1877F2] hover:bg-gray-50"
+            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-full py-2 text-sm font-medium text-[#1877F2] bg-gray-50"
           >
             <FaFacebookF className="text-xl" />
             Continue with Facebook
