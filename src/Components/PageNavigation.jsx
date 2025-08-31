@@ -4,6 +4,7 @@ import { RiMenuUnfold2Line } from "react-icons/ri";
 import { FaPencil } from "react-icons/fa6";
 import {
   BiHistory,
+  BiLocationPlus,
   BiSupport,
   BiWalletAlt
 } from "react-icons/bi";
@@ -21,6 +22,7 @@ import {
   FiChevronUp
 } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
+import { RxAvatar } from 'react-icons/rx';
 
 export const PageNav = () => {
     const { user, logout, loading } = useAuth();
@@ -37,14 +39,23 @@ export const PageNav = () => {
         }
       };
       
-    
-  const menuItems = [
-    { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
-    { path: "/dashboard/orders", label: "Orders", icon: <RiMenuUnfold2Line /> },
-    { path: "/dashboard/support", label: "Support", icon: <BiSupport /> },
-    { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
-    { path: "/dashboard/wallet", label: "Wallet", icon: <BiWalletAlt /> },
-  ];
+      const authMenuItems = [
+        { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
+        { path: "/dashboard/orders", label: "Orders", icon: <RiMenuUnfold2Line /> },
+        { path: "/dashboard/support", label: "Support", icon: <BiSupport /> },
+        { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
+        { path: "/dashboard/wallet", label: "Wallet", icon: <BiWalletAlt /> },
+      ];
+      
+      const guestMenuItems = [
+        { path: "/", label: "Home", icon: <RiMenuUnfold2Line /> },
+        { path: "/services", label: "Services", icon: <BiSupport /> },
+        { path: "/about", label: "About", icon: <RxAvatar /> },
+        { path: "/locations", label: "Locations", icon: <BiLocationPlus /> },
+        { path: "/blog", label: "Blog", icon: <BiWalletAlt /> },
+      ];
+      const menuItems = user ? authMenuItems : guestMenuItems;
+      
 
   const profileMenuItems = [
     { path: "/dashboard/profile", label: "Manage Account", icon: <FaUser /> },

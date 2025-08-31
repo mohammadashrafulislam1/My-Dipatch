@@ -215,7 +215,7 @@ const LandingPage = () => {
       Join Now
     </button>
     <button
-      onClick={() => navigate("/features")}
+      // onClick={() => navigate("/features")}
       className="bg-white border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition"
     >
       Explore App
