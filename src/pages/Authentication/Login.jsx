@@ -11,7 +11,7 @@ import useAuth from "../../Components/useAuth";
 const Login = () => {
   const { login, loading } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", role:"customer" });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
