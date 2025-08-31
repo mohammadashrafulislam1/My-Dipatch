@@ -4,8 +4,12 @@ import { FaUser, FaCity, FaEnvelope, FaPhone, FaLock, FaImage } from "react-icon
 import axios from "axios";
 import { endPoint } from "../../Components/ForAPIs";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../Components/useAuth";
 
 const Signup = () => {
+  const { signup, loading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     city: "",
@@ -31,9 +35,11 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match ❌");
       return;
     }
+
+    (true); // ✅ start loading
 
     const [firstName, ...lastNameParts] = formData.name.trim().split(" ");
     const lastName = lastNameParts.join(" ");
@@ -49,29 +55,35 @@ const Signup = () => {
     if (profileImage) formPayload.append("profileImage", profileImage);
 
     try {
-      const { data } = await axios.post(`${endPoint}/user/signup`, formPayload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await signup(formPayload);
+      toast.success("Signup successful! 🎉 Redirecting...");
 
-      toast.success("Signup successful! 🎉");
-      console.log("User:", data);
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error("Signup error:", err.response?.data?.error || err.message);
       toast.error(err.response?.data?.error || "Error signing up ❌");
+    } finally {
+      (false); // ✅ stop loading
     }
   };
 
   return (
     <div
-    className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
-    style={{
-      backgroundImage:
-        "url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1756262884/localRun/Assets/Gemini_Generated_Image_geij8qgeij8qgeij_iqy1tr.png')",
-    }}
-  >
+      className="min-h-screen flex items-center justify-center bg-cover bg-center px-4 relative"
+      style={{
+        backgroundImage:
+          "url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1756262884/localRun/Assets/Gemini_Generated_Image_geij8qgeij8qgeij_iqy1tr.png')",
+      }}
+    >
       <Toaster position="top-right" />
 
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 my-5">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 my-5 relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-3xl z-10">
+            <div className="w-10 h-10 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+
         <div className="text-center mb-6">
           <img
             src="https://i.ibb.co/TxC947Cw/thumbnail-Image-2025-07-09-at-2-10-AM-removebg-preview.png"
@@ -85,7 +97,7 @@ const Signup = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {[
+          {[ 
             { icon: FaUser, name: "name", placeholder: "Full Name", type: "text" },
             { icon: FaCity, name: "city", placeholder: "City", type: "text" },
             { icon: FaEnvelope, name: "email", placeholder: "Email", type: "email" },
@@ -155,13 +167,17 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-full font-semibold hover:scale-105 transition transform duration-200"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-full font-semibold hover:scale-105 transition transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign Up
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
 
           <div className="text-center mt-3 text-gray-600 text-sm">
-            Already have an account? <a href="/login" className="text-blue-500 font-semibold hover:underline">Log In</a>
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-500 font-semibold hover:underline">
+              Log In
+            </a>
           </div>
         </form>
       </div>

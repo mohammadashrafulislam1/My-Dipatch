@@ -5,11 +5,14 @@ import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import { endPoint } from "../../Components/ForAPIs";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../Components/useAuth";
 
 const Login = () => {
+  const { login, loading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -17,26 +20,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${endPoint}/user/login`,
-        formData,
-        { withCredentials: true }
-      );
+      console.log(formData)
+      await login(formData);
 
       toast.success("Logged in successfully 🎉");
-      console.log("Login success:", response.data);
 
+
+      setTimeout(() => navigate("/"), 500);
       // Optional: redirect
       // window.location.href = "/dashboard";
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       toast.error(error.response?.data?.message || "Login failed ❌");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   const handleGoogleLogin = () => toast("Google login coming soon 🚀");
