@@ -25,8 +25,11 @@ import { RiMenuUnfold2Line } from "react-icons/ri";
 import { FaPencil } from "react-icons/fa6";
 import { MapPinIcon, PlusIcon } from "lucide-react";
 import RideRequestForm from "../../Components/RideRequestForm";
+import useAuth from "../../Components/useAuth";
 
 const LandingPage = () => {
+  const { user, loading } = useAuth();
+  console.log(user)
   const navigate = useNavigate();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [midwayStops, setMidwayStops] = useState([""]);
@@ -106,83 +109,47 @@ const LandingPage = () => {
           ))}
         </div>
 
+       {/* Avatar or Login */}
+  <div className="relative">
+    {user ? (
+      <>
         {/* Profile Dropdown */}
-        <div className="relative">
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-          >
-            <img
-              src="https://i.pravatar.cc/40"
-              alt="avatar"
-              className="w-10 h-10 rounded-full border-2 border-[#006FFF]"
-            />
-            <div className="text-left">
-              <div className="text-sm font-semibold text-gray-900">John Doe</div>
-              <div className="text-xs text-gray-500">Customer</div>
-            </div>
-            {showProfileDropdown ? (
-              <FiChevronUp className="text-gray-500 text-lg" />
-            ) : (
-              <FiChevronDown className="text-gray-500 text-lg" />
-            )}
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+        >
+          <img
+            src="https://i.pravatar.cc/40"
+            alt="avatar"
+            className="w-10 h-10 rounded-full border-2 border-[#006FFF]"
+          />
+          <div className="text-left">
+            <div className="text-sm font-semibold text-gray-900">John Doe</div>
+            <div className="text-xs text-gray-500">Customer</div>
           </div>
-
-          {showProfileDropdown && (
-            <div className="absolute right-0 mt-2 w-[300px] bg-white/80 backdrop-blur-xl shadow-2xl rounded-xl z-50 p-6">
-              <div className="flex justify-center gap-3 mb-4">
-  <div
-    onClick={() => navigate("/dashboard/notifications")}
-    className="relative flex items-center justify-center bg-[#f0f8ff] w-12 h-12 
-    hover:bg-[#e6f0ff] transition p-2 rounded-xl cursor-pointer text-[#006FFF] text-[20px]"
-  >
-    <FiBell />
-    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[14px] px-[5px] rounded-full border border-white">0</span>
-  </div>
-</div>
-
-
-              {/* Top Menu Cards */}
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                {topMenuItems.map(({ path, label, icon }, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => navigate(path)}
-                    className="text-center text-sm p-3 rounded-lg border hover:shadow-md cursor-pointer"
-                  >
-                    {icon}
-                    <div className="mt-1">{label}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Profile Navigation */}
-              <div className="flex flex-col gap-2">
-                {profileMenuItems.map(({ path, label, icon }, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => navigate(path)}
-                    className="flex items-center text-[17px] gap-3 text-sm text-gray-700 hover:text-black
-                    hover:border hover:shadow-md p-3 rounded-lg 
-                     cursor-pointer"
-                  >
-                    {icon}
-                    {label}
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-4 border-t pt-3">
-                <button
-                  className="flex items-center gap-2 text-sm text-red-600 hover:underline"
-                  onClick={() => navigate("/logout")}
-                >
-                  <FaSignOutAlt /> Sign Out
-                </button>
-              </div>
-            </div>
+          {showProfileDropdown ? (
+            <FiChevronUp className="text-gray-500 text-lg" />
+          ) : (
+            <FiChevronDown className="text-gray-500 text-lg" />
           )}
         </div>
+
+        {showProfileDropdown && (
+          <div className="absolute right-0 mt-2 w-[300px] bg-white/80 backdrop-blur-xl shadow-2xl rounded-xl z-50 p-6">
+            {/* Notifications, Top Menu, Profile Navigation, Sign Out */}
+            {/* Keep your existing dropdown content here */}
+          </div>
+        )}
+      </>
+    ) : (
+      <button
+        onClick={() => navigate("/login")}
+        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+      >
+        Login
+      </button>
+    )}
+  </div>
       </div>
 
 {/* Bottom Navigation Bar */}
@@ -206,8 +173,11 @@ const LandingPage = () => {
       </div>
       
       {/* Avatar for Account Page */}
-      <div 
-        className="relative flex flex-col items-center justify-center text-xs cursor-pointer ml-4"
+     {/* Avatar or Login */}
+  <div className="flex flex-col items-center justify-center text-xs ml-4">
+    {user ? (
+      <div
+        className="relative flex flex-col items-center justify-center cursor-pointer"
         onClick={() => navigate("/account")}
       >
         <img
@@ -217,6 +187,15 @@ const LandingPage = () => {
         />
         <span className="mt-[2px]">Account</span>
       </div>
+    ) : (
+      <button
+        onClick={() => navigate("/login")}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs hover:bg-blue-700 transition"
+      >
+        Login
+      </button>
+    )}
+  </div>
     </div>
 
 
@@ -259,86 +238,155 @@ const LandingPage = () => {
       </div>
 
 {/* account and activity */}
-<div className="flex flex-col lg:flex-row md:mt-20 mt-44 mb-8 w-[90%] mx-auto gap-8 
-rounded-2xl border border-2 p-6  ">
+{user ? (
+        // Logged-in user view
+        <div className="flex flex-col lg:flex-row md:mt-20 mt-44 mb-8 w-[90%] mx-auto gap-8 rounded-2xl border border-2 p-6">
+          {/* Your Location */}
+          <div className="w-full lg:w-1/3 bg-white">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">Your Location</h3>
+            <div className="w-full rounded-xl overflow-hidden">
+              <iframe
+                title="Regina Map"
+                width="100%"
+                height="220"
+                className="rounded-xl"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45523.89642954821!2d-104.67554336896333!3d50.44521053608486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x531c1e64b52f3f3f%3A0x6a0ef84f87355f51!2sRegina%2C%20SK!5e0!3m2!1sen!2sca!4v1720364567890!5m2!1sen!2sca"
+              ></iframe>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">2248 Osler Street, Regina SK</p>
+          </div>
 
-  {/* Your Location */}
-  <div className="w-full lg:w-1/3 bg-white">
-    <h3 className="text-xl font-semibold mb-4 text-gray-800 ">Your Location</h3>
-    <div className="w-full rounded-xl overflow-hidden">
-      <iframe
-        title="Regina Map"
-        width="100%"
-        height="220"
-        className="rounded-xl"
-        loading="lazy"
-        allowFullScreen
-        referrerPolicy="no-referrer-when-downgrade"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45523.89642954821!2d-104.67554336896333!3d50.44521053608486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x531c1e64b52f3f3f%3A0x6a0ef84f87355f51!2sRegina%2C%20SK!5e0!3m2!1sen!2sca!4v1720364567890!5m2!1sen!2sca"
-      ></iframe>
-    </div>
-    <p className="text-sm text-gray-500 mt-2">2248 Osler Street, Regina SK</p>
-  </div>
+          {/* Order History */}
+          <div className="w-full lg:w-1/3 bg-white">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Order History</h2>
+            {visibleOrders.map((order, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 border rounded-xl p-4 flex items-center justify-between mb-3 transition hover:shadow"
+              >
+                <div>
+                  <p className="font-medium text-gray-800">{order.name}</p>
+                  <p className="text-sm text-gray-500">{order.address}</p>
+                </div>
+                <span
+                  className={`text-xs font-medium px-3 py-1 rounded-full ${
+                    order.status === "Completed"
+                      ? "bg-green-100 text-green-600"
+                      : "bg-red-100 text-red-600"
+                  }`}
+                >
+                  {order.status}
+                </span>
+              </div>
+            ))}
 
-  {/* Order History */}
-  <div className="w-full lg:w-1/3 bg-white">
-    <h2 className="text-xl font-semibold mb-4 text-gray-800">Order History</h2>
+            {orderHistory.length > 3 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="text-blue-600 hover:underline text-sm mt-2"
+              >
+                {showAll ? "See Less" : "See More"}
+              </button>
+            )}
+          </div>
 
-    {visibleOrders.map((order, index) => (
-      <div
-        key={index}
-        className="bg-gray-50 border rounded-xl p-4 flex items-center justify-between mb-3 transition hover:shadow"
-      >
-        <div>
-          <p className="font-medium text-gray-800">{order.name}</p>
-          <p className="text-sm text-gray-500">{order.address}</p>
+          {/* Ride Summary */}
+          <div className="w-full lg:w-1/3 bg-white">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800">Your Ride Summary</h2>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="bg-blue-50 rounded-xl p-4 shadow-sm hover:bg-blue-100 transition">
+                <p className="text-sm text-gray-500">Total Rides</p>
+                <p className="text-2xl font-bold text-blue-600">84</p>
+              </div>
+              <div className="bg-green-50 rounded-xl p-4 shadow-sm hover:bg-green-100 transition">
+                <p className="text-sm text-gray-500">Total Distance</p>
+                <p className="text-2xl font-bold text-green-600">215 km</p>
+              </div>
+              <div className="bg-gray-100 rounded-xl p-4 shadow-sm hover:bg-gray-200 transition">
+                <p className="text-sm text-gray-500">Last Ride</p>
+                <p className="text-xl font-bold text-gray-700">Aug 2, 2025</p>
+              </div>
+              <div className="bg-green-50 rounded-xl p-4 shadow-sm hover:bg-green-100 transition">
+                <p className="text-sm text-gray-500">Total Cancelled</p>
+                <p className="text-2xl font-bold text-red-600">0</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <span
-          className={`text-xs font-medium px-3 py-1 rounded-full ${
-            order.status === "Completed"
-              ? "bg-green-100 text-green-600"
-              : "bg-red-100 text-red-600"
-          }`}
-        >
-          {order.status}
-        </span>
-      </div>
-    ))}
-
-    {orderHistory.length > 3 && (
-      <button
-        onClick={() => setShowAll(!showAll)}
-        className="text-blue-600 hover:underline text-sm mt-2"
-      >
-        {showAll ? "See Less" : "See More"}
-      </button>
-    )}
-  </div>
-
-  {/* Ride Summary */}
-  <div className="w-full lg:w-1/3 bg-white">
-    <h2 className="text-xl font-semibold mb-6 text-gray-800">Your Ride Summary</h2>
-    <div className="grid grid-cols-2 gap-4 text-center">
-      <div className="bg-blue-50 rounded-xl p-4 shadow-sm hover:bg-blue-100 transition">
-        <p className="text-sm text-gray-500">Total Rides</p>
-        <p className="text-2xl font-bold text-blue-600">84</p>
-      </div>
-      <div className="bg-green-50 rounded-xl p-4 shadow-sm hover:bg-green-100 transition">
-        <p className="text-sm text-gray-500">Total Distance</p>
-        <p className="text-2xl font-bold text-green-600">215 km</p>
-      </div>
-      <div className="bg-gray-100 rounded-xl p-4 shadow-sm hover:bg-gray-200 transition">
-  <p className="text-sm text-gray-500">Last Ride</p>
-  <p className="text-xl font-bold text-gray-700">Aug 2, 2025</p>
-</div>
-      <div className="bg-green-50 rounded-xl p-4 shadow-sm hover:bg-green-100 transition">
-        <p className="text-sm text-gray-500">Total Cancelled</p>
-        <p className="text-2xl font-bold text-red-600">0</p>
-      </div>
+      ) : (
+        // Not logged-in view
+<div className="mt-20 flex flex-col items-center text-center gap-8 w-[90%] mx-auto">
+  {/* Map Preview */}
+  <div className="w-full lg:w-3/4 h-64 rounded-2xl overflow-hidden shadow-lg relative">
+    <iframe
+      title="Preview Map"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45523.89642954821!2d-104.67554336896333!3d50.44521053608486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x531c1e64b52f3f3f%3A0x6a0ef84f87355f51!2sRegina%2C%20SK!5e0!3m2!1sen!2sca!4v1720364567890!5m2!1sen!2sca"
+      className="w-full h-full filter blur-sm scale-105"
+      loading="lazy"
+    ></iframe>
+    <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/60 to-transparent flex flex-col justify-center items-center">
+      <h2 className="text-2xl font-bold text-gray-800">Track Rides Instantly</h2>
+      <p className="text-gray-600 mt-2">See where your driver is in real-time</p>
     </div>
   </div>
 
+  {/* Teaser Stats */}
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-3/4">
+    <div className="bg-blue-50 p-4 rounded-xl shadow hover:bg-blue-100 transition">
+      <p className="text-sm text-gray-500">Rides Today</p>
+      <p className="text-2xl font-bold text-blue-600">5,482</p>
+    </div>
+    <div className="bg-green-50 p-4 rounded-xl shadow hover:bg-green-100 transition">
+      <p className="text-sm text-gray-500">Cities Covered</p>
+      <p className="text-2xl font-bold text-green-600">30</p>
+    </div>
+    <div className="bg-yellow-50 p-4 rounded-xl shadow hover:bg-yellow-100 transition">
+      <p className="text-sm text-gray-500">Drivers Online</p>
+      <p className="text-2xl font-bold text-yellow-600">1,024</p>
+    </div>
+    <div className="bg-red-50 p-4 rounded-xl shadow hover:bg-red-100 transition">
+      <p className="text-sm text-gray-500">Avg Arrival</p>
+      <p className="text-2xl font-bold text-red-600">5 min</p>
+    </div>
+  </div>
+
+  {/* Features */}
+  <div className="flex flex-col md:flex-row gap-6 w-full lg:w-3/4 mt-6">
+    <div className="flex-1 bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+      <h3 className="font-semibold text-gray-800 mb-2">Fast Rides</h3>
+      <p className="text-gray-500 text-sm">Get a ride in minutes, anywhere in your city.</p>
+    </div>
+    <div className="flex-1 bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+      <h3 className="font-semibold text-gray-800 mb-2">Safe Drivers</h3>
+      <p className="text-gray-500 text-sm">All drivers are verified and rated by users.</p>
+    </div>
+    <div className="flex-1 bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+      <h3 className="font-semibold text-gray-800 mb-2">Track Your Trip</h3>
+      <p className="text-gray-500 text-sm">Know your driver’s location in real-time.</p>
+    </div>
+  </div>
+
+  {/* CTA Buttons */}
+  <div className="mt-6 flex flex-col sm:flex-row gap-4">
+    <button
+      onClick={() => navigate("/signup")}
+      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+    >
+      Join Now
+    </button>
+    <button
+      onClick={() => navigate("/features")}
+      className="bg-white border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition"
+    >
+      Explore App
+    </button>
+  </div>
 </div>
+
+      )}
 
 {/* Why Choose Us Section */}
 <div className="bg-white py-16 px-6 lg:px-20 text-center">

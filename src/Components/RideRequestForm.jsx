@@ -3,8 +3,13 @@ import axios from "axios";
 import { MapPinIcon, PlusIcon } from "lucide-react";
 import { FaTimes } from "react-icons/fa";
 import { endPoint } from "./ForAPIs.js";
+import useAuth from "./useAuth.js";
+import { useNavigate } from "react-router-dom";
 
 export default function RideRequestForm() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
     // Initialize state
 const [pickup, setPickup] = useState({ address: "", lat: 0, lng: 0 });
 const [dropoff, setDropoff] = useState({ address: "", lat: 0, lng: 0 });
@@ -30,6 +35,11 @@ const handleStopChange = (index, value) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user) {
+      navigate("/login"); // redirect if not logged in
+      return;
+    }
+  
    console.log(endPoint)
     try {
       const res = await axios.post(
@@ -120,11 +130,12 @@ const handleStopChange = (index, value) => {
 
       {/* Submit Button */}
       <button
-        type="submit"
-        className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl text-lg font-semibold"
-      >
-        Get Instant Quote
-      </button>
+  type="submit"
+  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl text-lg font-semibold"
+>
+  Get Instant Quote
+</button>
+
     </form>
   );
 }

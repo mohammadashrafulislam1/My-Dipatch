@@ -9,13 +9,13 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   // ✅ Fetch current user from backend
-  const fetchCurrentUser = async () => {
-    setLoading(true);
+const fetchCurrentUser = async () => {
     try {
       const { data } = await axios.get(`${endPoint}/user/me`, {
-        withCredentials: true,
+        withCredentials: true, // important!
       });
-      setUser(data);
+      console.log(data)
+      setUser(data); // set the current user
     } catch (err) {
       setUser(null);
       console.error("Fetch current user error:", err.response?.data || err.message);
@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchCurrentUser();
   }, []);

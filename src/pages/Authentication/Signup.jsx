@@ -57,6 +57,7 @@ const Signup = () => {
     try {
       await signup(formPayload);
       toast.success("Signup successful! 🎉 Redirecting...");
+      console.log("User:", data);
 
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
