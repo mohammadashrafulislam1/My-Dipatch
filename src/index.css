@@ -133,6 +133,54 @@ html.dark textarea {
   @apply bg-white text-black border-gray-400;
 }
 
+/* Ride Request Start*/
+/* Override Google autocomplete dropdown */
+.pac-container {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  font-family: "Poppins", sans-serif !important;
+  padding: 6px !important;
+  z-index: 9999 !important;
+}
+
+/* Each suggestion item */
+.pac-item {
+  white-space: normal !important;  /* Allow text to wrap */
+  padding: 6px !important;
+  border-radius: 8px !important;
+  line-height: 1 !important;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Highlighted suggestion */
+.pac-item:hover,
+.pac-item-selected {
+  background-color: #f97316 !important; /* orange highlight */
+  color: white !important;
+  cursor: pointer;
+}
+
+/* Main title (like street) */
+.pac-item .pac-item-query {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px;
+  white-space: normal !important;
+}
+
+/* Secondary text (city, country, etc.) */
+.pac-item span {
+  font-size: 12px !important;
+  color: #555 !important;
+  white-space: normal !important;
+}
+
+
+/* Ride Request End*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

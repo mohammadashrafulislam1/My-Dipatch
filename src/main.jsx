@@ -18,11 +18,12 @@ import './index.css'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './Router/router.jsx';
 import AuthProvider from './Router/AuthProvider.jsx';
+import { LoadScript } from '@react-google-maps/api';
 
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-   <AuthProvider><RouterProvider router={router}> </RouterProvider></AuthProvider> 
+   <AuthProvider><RouterProvider router={router}> </RouterProvider></AuthProvider>
   </StrictMode>,
 )
