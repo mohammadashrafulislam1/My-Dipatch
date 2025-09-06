@@ -49,6 +49,7 @@ const fetchCurrentUser = async () => {
   // Login
   const login = async (formData ) => {
     setLoading(true);
+    cosole.log(formData)
     try {
       const { data } = await axios.post(
         `${endPoint}/user/login`,
