@@ -36,12 +36,14 @@ const fetchCurrentUser = async () => {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
+      console.log(data)
       setUser(data.newUser);
       return data;
-    } catch (err) {
-      console.error("Signup error:", err.response?.data || err.message);
+    }catch (err) {
+      console.error("Signup error:", err?.response?.data ?? err?.message ?? err);
       throw err;
-    } finally {
+    }
+     finally {
       setLoading(false);
     }
   };
