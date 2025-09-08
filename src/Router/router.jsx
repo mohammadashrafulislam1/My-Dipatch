@@ -15,6 +15,10 @@ import Task from "../pages/Customer/Dashboard/Task";
 import LandingPage from "../pages/Customer/LandingPage";
 import AccountPage from "../pages/Customer/Account";
 import PrivateRoute from "./PrivateRouter";
+import Services from "../pages/Services";
+import About from "../pages/About";
+import Blogs from "../pages/Blogs";
+import Locations from "../pages/Locations";
 
 export const router = createBrowserRouter([
     {
@@ -78,6 +82,26 @@ export const router = createBrowserRouter([
     {
         path:'/signup',
         element:<Signup/>,
+        errorElement:<h1>err</h1>
+    },
+    {
+        path:'/services',
+        element:<Services/>,
+        errorElement:<h1>err</h1>
+    },
+    {
+        path:'/about',
+        element:<About/>,
+        errorElement:<h1>err</h1>
+    },
+    {
+        path:'/locations',
+        element:<Locations/>,
+        errorElement:<h1>err</h1>
+    },
+    {
+        path:'/blog',
+        element:<Blogs/>,
         errorElement:<h1>err</h1>
     },
 ])
