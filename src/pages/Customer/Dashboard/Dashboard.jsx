@@ -71,7 +71,7 @@ const Dashboard = () => {
 
   const menuItems = [
     { path: "/dashboard", label: "Dashboard", icon: <SlHome /> },
-    { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
+    { path: "/", label: "New Task", icon: <FaPencil /> },
     { path: "orders", label: "Order Lists", icon: <RiMenuUnfold2Line /> },
     { path: "chat", label: "Chat", icon: <BsChatLeftDots /> },
     { path: "wallet", label: "Wallet", icon: <BiWalletAlt /> },
