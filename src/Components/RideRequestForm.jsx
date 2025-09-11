@@ -100,10 +100,6 @@ export default function RideRequestForm() {
   };
 
   return (
-    <LoadScript
-      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-      libraries={["places"]}
-    >
       <form className="space-y-4 dark:text-white" onSubmit={handleSubmit}>
         {/* Pickup Location */}
         <div className="relative">
@@ -191,6 +187,5 @@ export default function RideRequestForm() {
           Get Instant Quote
         </button>
       </form>
-    </LoadScript>
   );
 }

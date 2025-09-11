@@ -12,6 +12,8 @@ import {
 import RideRequestForm from "../../Components/RideRequestForm";
 import useAuth from "../../Components/useAuth";
 import { PageNav } from "../../Components/PageNavigation";
+import { useLoadScript } from "@react-google-maps/api";
+import LoadingScreen from "../../Components/LoadingScreen";
 
 const LandingPage = () => {
   const { user, logout, loading } = useAuth();
@@ -28,7 +30,19 @@ const LandingPage = () => {
   ];
 
   const visibleOrders = showAll ? orderHistory : orderHistory.slice(0, 3);
+  // Load Google Maps API only once
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
+  });
 
+  if (loadError) {
+    return <div className="text-red-500">Error loading maps</div>;
+  }
+
+  if (!isLoaded) {
+    return <LoadingScreen/>;
+  }
 
   
   return (
@@ -68,8 +82,8 @@ const LandingPage = () => {
             marginBottom: `-${150 - midwayStops.length * 30}px`, // increase bottom margin as stops grow
           }}>
       <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6 ">Book an Errand</h2>
+      <RideRequestForm onSuccess={() => window.location.reload()} />
 
-      <RideRequestForm />
     </div>
       </div>
 
