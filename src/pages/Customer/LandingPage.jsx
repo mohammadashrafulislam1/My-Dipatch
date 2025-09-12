@@ -14,6 +14,7 @@ import useAuth from "../../Components/useAuth";
 import { PageNav } from "../../Components/PageNavigation";
 import { useLoadScript } from "@react-google-maps/api";
 import LoadingScreen from "../../Components/LoadingScreen";
+import ErrorPage from "../../Components/ErrorPage";
 
 const LandingPage = () => {
   const { user, logout, loading } = useAuth();
@@ -37,7 +38,7 @@ const LandingPage = () => {
   });
 
   if (loadError) {
-    return <div className="text-red-500">Error loading maps</div>;
+    return <ErrorPage/>;
   }
 
   if (!isLoaded) {

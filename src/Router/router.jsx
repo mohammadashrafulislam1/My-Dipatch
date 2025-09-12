@@ -19,12 +19,13 @@ import Services from "../pages/Services";
 import About from "../pages/About";
 import Blogs from "../pages/Blogs";
 import Locations from "../pages/Locations";
+import ErrorPage from "../Components/ErrorPage";
 
 export const router = createBrowserRouter([
     {
         path:'/dashboard',
         element:<Dashboard/>,
-        errorElement:<h1>err</h1>,
+        errorElement:<ErrorPage/>,
         children:[
             {
                 path:'',
@@ -67,41 +68,41 @@ export const router = createBrowserRouter([
     {
         path:'/',
         element:<LandingPage/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/account',
         element:<PrivateRoute><AccountPage/></PrivateRoute>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/login',
         element:<Login/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/signup',
         element:<Signup/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/services',
         element:<Services/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/about',
         element:<About/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/locations',
         element:<Locations/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
     {
         path:'/blog',
         element:<Blogs/>,
-        errorElement:<h1>err</h1>
+        errorElement:<ErrorPage/>
     },
 ])
