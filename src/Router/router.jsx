@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "../pages/Customer/Dashboard/Dashboard";
 import Order from "../pages/Customer/Dashboard/Orders";
-import Chat from "../pages/Customer/Dashboard/Chat";
+import Chat from "../pages/Customer/Dashboard/CustomerChat";
 import Wallet from "../pages/Customer/Dashboard/Wallet";
 import Default from "../pages/Customer/Dashboard/Default";
 import Login from "../pages/Authentication/Login";
