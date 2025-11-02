@@ -19,11 +19,14 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './Router/router.jsx';
 import AuthProvider from './Router/AuthProvider.jsx';
 import { LoadScript } from '@react-google-maps/api';
+import RideStatusProvider from './Components/RideStatusProvider.jsx';
 
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-   <AuthProvider><RouterProvider router={router}> </RouterProvider></AuthProvider>
+   <AuthProvider>
+     <RideStatusProvider> {/* Wrap with RideStatusProvider */}<RouterProvider router={router}> </RouterProvider></RideStatusProvider>
+     </AuthProvider>
   </StrictMode>,
 )

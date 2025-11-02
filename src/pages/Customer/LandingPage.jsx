@@ -15,6 +15,7 @@ import { PageNav } from "../../Components/PageNavigation";
 import { useLoadScript } from "@react-google-maps/api";
 import LoadingScreen from "../../Components/LoadingScreen";
 import ErrorPage from "../../Components/ErrorPage";
+import RideStatusIndicator from "../../Components/RideStatusIndicator";
 
 const LandingPage = () => {
   const { user, logout, loading } = useAuth();
@@ -49,9 +50,9 @@ const LandingPage = () => {
   return (
     <div className="overflow-x-hidden md:pb-0 pb-12">
       <PageNav/>
-
+<RideStatusIndicator />
 {/* Top Hero section */}
-<div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative ">
+<div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative overflow-hidden">
         <div className="bg-[#f8f8f8] overflow-hidden md:h-[504px]">
           {/* === Background Shapes Behind the Form === */}
   <img

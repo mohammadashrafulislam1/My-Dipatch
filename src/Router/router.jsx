@@ -108,7 +108,7 @@ export const router = createBrowserRouter([
     },
     
     {
-        path:'/track',
+        path:'/track/:id',
         element:<CustomerMap/>,
         errorElement:<ErrorPage/>
     },
