@@ -107,7 +107,13 @@
     font-weight: 900;
     font-style: italic;
   }
-
+/* Add this to your main CSS file if you suspect an issue */
+.driver-marker {
+    /* Ensure it's explicitly visible and positioned */
+    display: block !important;
+    /* Optionally add a background color for testing visibility */
+    /* background-color: red; */ 
+}
 
 /* Menu CSS */
 .menu-items{
