@@ -20,6 +20,7 @@ import About from "../pages/About";
 import Blogs from "../pages/Blogs";
 import Locations from "../pages/Locations";
 import ErrorPage from "../Components/ErrorPage";
+import CustomerMap from "../Components/CustomerMap";
 
 export const router = createBrowserRouter([
     {
@@ -103,6 +104,12 @@ export const router = createBrowserRouter([
     {
         path:'/blog',
         element:<Blogs/>,
+        errorElement:<ErrorPage/>
+    },
+    
+    {
+        path:'/track',
+        element:<CustomerMap/>,
         errorElement:<ErrorPage/>
     },
 ])
