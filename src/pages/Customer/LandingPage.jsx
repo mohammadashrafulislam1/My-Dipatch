@@ -52,7 +52,7 @@ const LandingPage = () => {
       <PageNav/>
 <RideStatusIndicator />
 {/* Top Hero section */}
-<div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative overflow-hidden">
+<div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative">
         <div className="bg-[#f8f8f8] md:h-[504px]">
           {/* === Background Shapes Behind the Form === */}
   <img
