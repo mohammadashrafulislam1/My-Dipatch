@@ -53,7 +53,7 @@ const LandingPage = () => {
 <RideStatusIndicator />
 {/* Top Hero section */}
 <div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative overflow-hidden">
-        <div className="bg-[#f8f8f8] overflow-hidden md:h-[504px]">
+        <div className="bg-[#f8f8f8] md:h-[504px]">
           {/* === Background Shapes Behind the Form === */}
   <img
     src="https://i.ibb.co/0yDtbMGz/Chat-GPT-Image-Jul-4-2025-11-46-42-PM.png" // abstract blob
