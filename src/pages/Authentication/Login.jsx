@@ -27,8 +27,7 @@ const Login = () => {
 
       toast.success("Logged in successfully 🎉");
 
-
-      setTimeout(() => navigate("/"), 500);
+window.location.replace("/"); // instantly redirects with reload
       // Optional: redirect
       // window.location.href = "/dashboard";
     } catch (error) {
