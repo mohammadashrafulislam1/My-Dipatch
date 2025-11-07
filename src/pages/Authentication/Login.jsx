@@ -26,8 +26,9 @@ const Login = () => {
       await login(formData);
 
       toast.success("Logged in successfully 🎉");
-
-window.location.replace("/"); // instantly redirects with reload
+setTimeout(() => {
+  window.location.href = "/"; // ✅ full reload redirect
+}, 1500);
       // Optional: redirect
       // window.location.href = "/dashboard";
     } catch (error) {
