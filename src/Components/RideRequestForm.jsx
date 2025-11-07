@@ -24,7 +24,7 @@ export default function RideRequestForm() {
   const midwayRefs = useRef([]);
 
   // Dummy customer ID (replace with logged-in user ID)
-  const customerId = "688aef18de763ae87a994a39";
+  const customerId = user?._id;
 
   // Handle midway stop add/remove
   const handleAddStop = () => {

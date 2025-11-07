@@ -40,10 +40,10 @@ const CustomerChat = () => {
     socket.current.emit("join", { userId: user._id, role: user.role });
 
     socket.current.on("chat-message", (msg) => {
-      if (msg.recipientId === user._id || msg.senderId === user._id) {
-        setMessages((prev) => [...prev, msg]);
-      }
-    });
+  if (msg.senderId === user._id) return;
+  setMessages((prev) => [...prev, msg]);
+});
+
 
     return () => socket.current.disconnect();
   }, [user?._id, user?.role]);
@@ -88,67 +88,87 @@ const CustomerChat = () => {
   const canChat = rideStatus && allowedStatuses.includes(rideStatus);
 
   // Send message
-  const handleSend = async () => {
-    if (!canChat || (!message.trim() && !selectedFile)) return;
-    if (!driver?._id) return alert("No driver connected.");
-  
-    const chatData = {
-      rideId: ride._id,
-      senderId: user._id,
-      senderRole: user.role,
-      recipientId: driver._id,
-    };
-  
-    try {
-      let newMsg;
-  
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-        formData.append("rideId", chatData.rideId);
-        formData.append("senderId", chatData.senderId);
-        formData.append("senderRole", chatData.senderRole);
-        formData.append("recipientId", chatData.recipientId);
-  
-        const fileRes = await axios.post(`${endPoint}/chat/upload`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-  
-        newMsg = {
-          ...chatData,
-          fileUrl: fileRes.data.fileUrl,
-          fileType: fileRes.data.fileType,
-          createdAt: new Date().toISOString(),
-        };
-  
-        setSelectedFile(null);
-        fileInputRef.current.value = "";
-        imageInputRef.current.value = "";
-      } else {
-        newMsg = {
-          ...chatData,
-          text: message.trim(), // ⚡ send as 'text' to match backend
-          createdAt: new Date().toISOString(),
-        };
-      }
-  
-      // Save to backend
-      const savedMsg = await axios.post(`${endPoint}/chat/send`, newMsg);
-      
-      // Use the saved message returned from backend
-      setMessages((prev) => [...prev, savedMsg.data.chat]);
-  
-      // Emit to socket
-      socket.current.emit("chat-message", savedMsg.data.chat);
-  
-      setMessage("");
-    } catch (err) {
-      console.error("Failed to send message:", err);
-    }
+ const handleSend = async () => {
+  if (!canChat || (!message.trim() && !selectedFile)) return;
+  if (!driver?._id) return alert("No driver connected.");
+
+  const chatData = {
+    rideId: ride._id,
+    senderId: user._id,
+    senderRole: user.role,
+    recipientId: driver._id,
   };
-  
-  
-  
+
+  try {
+    // If a file is selected
+    if (selectedFile) {
+      const tempUrl = URL.createObjectURL(selectedFile);
+
+      // ✅ Show optimistic message instantly
+      const optimisticMsg = {
+        senderId: user._id,
+        recipientId: driver._id,
+        fileUrl: tempUrl,
+        fileType: selectedFile.type.startsWith("image/") ? "image" : "file",
+        createdAt: new Date().toISOString(),
+        optimistic: true,
+      };
+      setMessages((prev) => [...prev, optimisticMsg]);
+
+      // Upload to backend
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("rideId", chatData.rideId);
+      formData.append("senderId", chatData.senderId);
+      formData.append("senderRole", chatData.senderRole);
+      formData.append("recipientId", chatData.recipientId);
+
+      const fileRes = await axios.post(`${endPoint}/chat/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      // ✅ Replace the optimistic message with the confirmed one
+      setMessages((prev) =>
+        prev
+          .filter((m) => !m.optimistic)
+          .concat({
+            ...fileRes.data.chat,
+            createdAt: new Date().toISOString(),
+          })
+      );
+
+      // Cleanup file input
+      setSelectedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (imageInputRef.current) imageInputRef.current.value = "";
+
+    } else {
+      // --- Send text ---
+      const textData = { ...chatData, text: message.trim() };
+
+      const optimisticText = {
+        senderId: user._id,
+        recipientId: driver._id,
+        message: message.trim(),
+        createdAt: new Date().toISOString(),
+        optimistic: true,
+      };
+      setMessages((prev) => [...prev, optimisticText]);
+
+      const savedMsg = await axios.post(`${endPoint}/chat/send`, textData);
+
+      setMessages((prev) =>
+        prev
+          .filter((m) => !m.optimistic)
+          .concat(savedMsg.data.chat)
+      );
+    }
+
+    setMessage("");
+  } catch (err) {
+    console.error("Failed to send message:", err);
+  }
+};
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -167,12 +187,26 @@ const CustomerChat = () => {
       <div className="w-1/3 border-r overflow-y-auto">
         <div className="p-4 font-semibold text-lg border-b">Drivers</div>
         {driver ? (
-          <div className="p-4 hover:bg-gray-100 cursor-pointer">
-            {driver.firstName} {driver.lastName}
-          </div>
-        ) : (
-          <div className="p-4 text-gray-500">No Active Ride</div>
-        )}
+  <div
+    className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-200 transition-all"
+    title={`Chat with ${driver.firstName}`}
+  >
+    <div className="relative">
+      <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-lg font-semibold">
+        {driver?.firstName?.charAt(0)}
+      </div>
+    </div>
+    <div>
+      <div className="font-medium">
+        {driver.firstName} {driver.lastName}
+      </div>
+      <div className="text-sm text-green-500">Active Chat</div>
+    </div>
+  </div>
+) : (
+  <div className="p-4 text-gray-500">No Active Ride</div>
+)}
+
       </div>
 
       {/* Chat Area */}
@@ -293,7 +327,8 @@ const CustomerChat = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              disabled={!canChat}
+              
+                  disabled={!!selectedFile || !canChat}
             />
             <button
               onClick={handleSend}

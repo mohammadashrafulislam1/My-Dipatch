@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import mapboxgl from "mapbox-gl";
 import useAuth from "./useAuth";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -17,7 +18,39 @@ export default function CustomerMap() {
   const [loading, setLoading] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [routeGeometry, setRouteGeometry] = useState(null);
+  const [zoomLevel, setZoomLevel] = useState(13);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
+  // 🕒 live clock update
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // 🔍 zoom handlers
+  const zoomIn = () => {
+    if (mapInstance.current) {
+      const newZoom = mapInstance.current.getZoom() + 1;
+      mapInstance.current.zoomTo(newZoom, { duration: 400 });
+      setZoomLevel(newZoom);
+    }
+  };
+  const zoomOut = () => {
+    if (mapInstance.current) {
+      const newZoom = mapInstance.current.getZoom() - 1;
+      mapInstance.current.zoomTo(newZoom, { duration: 400 });
+      setZoomLevel(newZoom);
+    }
+  };
+
+  // ✅ calculate estimated arrival time (+ 3–4 min)
+  const getEstimatedArrivalTime = (eta) => {
+    if (!eta) return "—";
+    const etaNumber = parseInt(eta); // e.g., "8 min" → 8
+    const extra = Math.floor(Math.random() * 2) + 1; // random 3–4 min
+    const arrival = new Date(currentTime.getTime() + (etaNumber + extra) * 60000);
+    return arrival.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
   // 🔄 Fetch all rides and filter by current user and status
   useEffect(() => {
     if (!user?._id) return;
@@ -495,6 +528,59 @@ export default function CustomerMap() {
   return (
     <div className="relative w-full h-screen">
       <div ref={mapRef} className="w-full h-full" />
+        {/* ======================= 🧭 UBER-STYLE INFO PANEL ======================= */}
+      {ride && (
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 
+                        bg-white shadow-2xl rounded-2xl px-6 py-4 w-[330px]
+                        text-center border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-800">
+            🚗 Your Ride Information
+          </h3>
+
+          <div className="mt-2 text-sm text-gray-700 space-y-1">
+            <p><span className="font-semibold">ETA:</span> {ride.eta || "—"}</p>
+            <p>
+              <span className="font-semibold">Estimated Arrival:</span>{" "}
+              {getEstimatedArrivalTime(ride.eta)}
+            </p>
+            <p><span className="font-semibold">Distance:</span> {ride.distance || "—"}</p>
+            <p>
+  <span className="font-semibold">Current Time:</span>{" "}
+  {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+</p>
+
+          </div>
+
+          {/* Driver Info */}
+          {ride.driverId ? (
+            <div className="mt-3 text-gray-800">
+              <p className="font-semibold">👨‍✈️ Driver Assigned</p>
+              <p>{ride.driverFirstName || "John"} {ride.driverLastName || "Doe"}</p>
+            </div>
+          ) : (
+            <p className="mt-3 text-gray-500 italic">Waiting for driver...</p>
+          )}
+        </div>
+      )}
+
+      {/* ======================= 🔍 ZOOM BUTTONS ======================= */}
+      <div className="absolute bottom-6 right-6 flex flex-col space-y-2 z-10">
+        <button
+          onClick={zoomIn}
+          className="p-3 bg-white shadow-lg rounded-full hover:bg-gray-200 transition"
+          title="Zoom In"
+        >
+          <FaPlus />
+        </button>
+        <button
+          onClick={zoomOut}
+          className="p-3 bg-white shadow-lg rounded-full hover:bg-gray-200 transition"
+          title="Zoom Out"
+        >
+          <FaMinus />
+        </button>
+      </div>
+
       
       {/* Status Panel */}
       <div className="absolute top-4 left-4 bg-white shadow-md rounded-lg px-4 py-2 min-w-64">

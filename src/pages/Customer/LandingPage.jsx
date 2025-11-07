@@ -53,17 +53,17 @@ const LandingPage = () => {
 <RideStatusIndicator />
 {/* Top Hero section */}
 <div className="bg-[#f8f8f8] mx-auto w-full md:flex items-center lg:px-16 px-4 py-4 lg:py-12 relative">
-        <div className="bg-[#f8f8f8] md:h-[504px]">
+        <div className="bg-[#f8f8f8] md:h-[504px] overflow-hidden">
           {/* === Background Shapes Behind the Form === */}
   <img
     src="https://i.ibb.co/0yDtbMGz/Chat-GPT-Image-Jul-4-2025-11-46-42-PM.png" // abstract blob
     alt="abstract blob"
-    className="absolute md:block hidden right-[-140px] top-[-280px] w-[73%] opacity-25"
+    className="absolute md:block hidden right-[-140px] top-[-280px] w-[73%] opacity-25 md:h-[504px] overflow-hidden"
   />
   <img
     src="https://i.ibb.co/6JBWTb0w/Chat-GPT-Image-Jul-4-2025-11-46-22-PM.png" // grid/map style
     alt="grid background"
-    className="absolute md:block hidden right-[-6px] opacity-75 top-[-30px] w-[50%]"
+    className="absolute md:block hidden right-[-6px] opacity-75 top-[-30px] w-[50%] md:h-[504px] overflow-hidden"
   />
        </div>
   {/* Left Column */}

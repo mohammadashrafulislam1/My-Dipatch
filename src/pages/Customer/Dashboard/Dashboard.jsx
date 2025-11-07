@@ -30,6 +30,7 @@ import { TfiAlignLeft } from "react-icons/tfi";
 import { VscSignOut } from "react-icons/vsc";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import BottomNavigation from "../../../Components/BottomNavigation";
+import useAuth from "../../../Components/useAuth";
 
 const notifications = [
   { id: 1, text: "You have a new message from Alex.", timeAgo: "2h ago" },
@@ -54,6 +55,7 @@ const Dashboard = () => {
   const [showMessages, setShowMessages] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const {user, logout} = useAuth();
   
   const pageTitles = {
     "/dashboard": "Dashboard",
@@ -68,7 +70,14 @@ const Dashboard = () => {
     .find((path) => location.pathname.startsWith(path));
 
   const currentTitle = pageTitles[matchedPath] || "Dashboard";
-
+const handleLogout = async () => {
+    try {
+      await logout();          // Call your existing logout function
+      window.location.href = "/"; // Full page reload to landing page
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const menuItems = [
     { path: "/dashboard", label: "Dashboard", icon: <SlHome /> },
     { path: "/", label: "New Task", icon: <FaPencil /> },
@@ -121,15 +130,11 @@ const Dashboard = () => {
 )}
 
         </div>
-        <div className="divider mt-6 mb-2" />
-        <NavLink
-          to="/logout"
-          className="flex items-center gap-2 text-gray-700 px-3 py-2 hover:bg-gray-100 rounded-md"
-          onClick={() => setSidebarOpen(false)}
-        >
+        <div className="divider mt-6 mb-2"
+     /> <div className=" flex items-center gap-2 text-gray-700 px-3 py-2 hover:bg-gray-100 rounded-md  cursor-pointer"
+     onClick={handleLogout}>
           <VscSignOut className="text-[16px]" />
-          Sign Out
-        </NavLink>
+          Sign Out</div>
       </div>
 
    {/* Mobile Bottom Navigation */}
