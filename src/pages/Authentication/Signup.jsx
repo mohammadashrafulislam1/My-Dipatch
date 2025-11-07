@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import { FaUser, FaCity, FaEnvelope, FaPhone, FaLock, FaImage } from "react-icons/fa";
-import axios from "axios";
-import { endPoint } from "../../Components/ForAPIs";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Components/useAuth";
+import { LoadScript, Autocomplete } from "@react-google-maps/api";
 
 const Signup = () => {
   const { signup, loading } = useAuth();
@@ -34,12 +33,11 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match ❌");
       return;
     }
-
-    (true); // ✅ start loading
 
     const [firstName, ...lastNameParts] = formData.name.trim().split(" ");
     const lastName = lastNameParts.join(" ");
@@ -57,13 +55,29 @@ const Signup = () => {
     try {
       await signup(formPayload);
       toast.success("Signup successful! 🎉 Redirecting...");
-
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error("Signup error:", err.response?.data?.error || err.message);
       toast.error(err.response?.data?.error || "Error signing up ❌");
-    } finally {
-      (false); // ✅ stop loading
+    }
+  };
+
+  // === Google Autocomplete handlers ===
+  const onLoad = (auto) => {
+    window.cityAuto = auto;
+    auto.setTypes(["(cities)"]); // Restrict to cities only
+  };
+
+  const onPlaceChanged = () => {
+    const place = window.cityAuto?.getPlace();
+    if (place?.address_components) {
+      const cityComponent = place.address_components.find((c) =>
+        c.types.includes("locality") || c.types.includes("administrative_area_level_1")
+      );
+      const cityName = cityComponent
+        ? cityComponent.long_name
+        : place.formatted_address;
+      setFormData((prev) => ({ ...prev, city: cityName }));
     }
   };
 
@@ -97,26 +111,70 @@ const Signup = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {[ 
-            { icon: FaUser, name: "name", placeholder: "Full Name", type: "text" },
-            { icon: FaCity, name: "city", placeholder: "City", type: "text" },
-            { icon: FaEnvelope, name: "email", placeholder: "Email", type: "email" },
-            { icon: FaPhone, name: "phone", placeholder: "Phone", type: "tel" },
-          ].map(({ icon: Icon, name, placeholder, type }) => (
-            <div className="relative" key={name}>
-              <Icon className="absolute top-3 left-3 text-gray-400" />
-              <input
-                type={type}
-                name={name}
-                placeholder={placeholder}
-                value={formData[name]}
-                onChange={handleChange}
-                required
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              />
-            </div>
-          ))}
+          {/* Name Input */}
+          <div className="relative">
+            <FaUser className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
+          {/* ✅ City Autocomplete Input */}
+          <div className="relative">
+            <FaCity className="absolute top-3 left-3 text-gray-400" />
+            <LoadScript
+              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+              libraries={["places"]}
+            >
+              <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="Enter your city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </Autocomplete>
+            </LoadScript>
+          </div>
+
+          {/* Email Input */}
+          <div className="relative">
+            <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Phone Input */}
+          <div className="relative">
+            <FaPhone className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Profile Image */}
           <div className="relative">
             <FaImage className="absolute top-5 left-3 text-gray-400" />
             <input
@@ -127,6 +185,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* Password */}
           <div className="relative">
             <FaLock className="absolute top-3 left-3 text-gray-400" />
             <input
@@ -136,7 +195,7 @@ const Signup = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <div
               className="absolute top-3 right-3 text-xl text-gray-600 cursor-pointer"
@@ -146,6 +205,7 @@ const Signup = () => {
             </div>
           </div>
 
+          {/* Confirm Password */}
           <div className="relative">
             <FaLock className="absolute top-3 left-3 text-gray-400" />
             <input
@@ -155,7 +215,7 @@ const Signup = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <div
               className="absolute top-3 right-3 text-xl text-gray-600 cursor-pointer"
@@ -165,14 +225,16 @@ const Signup = () => {
             </div>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-full font-semibold hover:scale-105 transition transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-full font-semibold hover:scale-105 transition transform duration-200 disabled:opacity-50"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>
 
+          {/* Login Link */}
           <div className="text-center mt-3 text-gray-600 text-sm">
             Already have an account?{" "}
             <a href="/login" className="text-blue-500 font-semibold hover:underline">

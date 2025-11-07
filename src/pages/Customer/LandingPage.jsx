@@ -12,39 +12,17 @@ import {
 import RideRequestForm from "../../Components/RideRequestForm";
 import useAuth from "../../Components/useAuth";
 import { PageNav } from "../../Components/PageNavigation";
-import { useLoadScript } from "@react-google-maps/api";
+import { LoadScript, useLoadScript } from "@react-google-maps/api";
 import LoadingScreen from "../../Components/LoadingScreen";
 import ErrorPage from "../../Components/ErrorPage";
 import RideStatusIndicator from "../../Components/RideStatusIndicator";
+import CustomerRides from "../../Components/CustomerRides";
+import RideSummary from "../../Components/RideSummary";
 
 const LandingPage = () => {
-  const { user, logout, loading } = useAuth();
+  const { user, logout } = useAuth();
   console.log(user)
   const [midwayStops, setMidwayStops] = useState([""]);
-  const [showAll, setShowAll] = useState(false);
-
-  const orderHistory = [
-    { name: "Ashraful Islam", address: "Osler st – S4P 1W9", status: "In progress" },
-    { name: "Jhon Snow", address: "Rose st – S3P 1W9", status: "Completed" },
-    { name: "Katriena Saw", address: "14th ave – S5P 1T9", status: "Completed" },
-    { name: "Tom Gray", address: "Broadway – S4T 0H9", status: "Completed" },
-    { name: "Jane F.", address: "Victoria Ave – S4N 0P4", status: "Completed" },
-  ];
-
-  const visibleOrders = showAll ? orderHistory : orderHistory.slice(0, 3);
-  // Load Google Maps API only once
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
-  });
-
-  if (loadError) {
-    return <ErrorPage/>;
-  }
-
-  if (!isLoaded) {
-    return <LoadingScreen/>;
-  }
 
   
   return (
@@ -84,7 +62,12 @@ const LandingPage = () => {
             marginBottom: `-${150 - midwayStops.length * 30}px`, // increase bottom margin as stops grow
           }}>
       <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6 ">Book an Errand</h2>
-      <RideRequestForm onSuccess={() => window.location.reload()} />
+     <LoadScript
+  googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+  libraries={["places"]}
+>
+  <RideRequestForm onSuccess={() => window.location.reload()} />
+</LoadScript>
 
     </div>
       </div>
@@ -94,79 +77,44 @@ const LandingPage = () => {
         // Logged-in user view
         <div className="flex flex-col lg:flex-row md:mt-20 mt-44 mb-8 w-[90%] mx-auto gap-8 rounded-2xl border border-2 p-6">
           {/* Your Location */}
-          <div className="w-full lg:w-1/3 bg-white">
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">Your Location</h3>
-            <div className="w-full rounded-xl overflow-hidden">
-              <iframe
-                title="Regina Map"
-                width="100%"
-                height="220"
-                className="rounded-xl"
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45523.89642954821!2d-104.67554336896333!3d50.44521053608486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x531c1e64b52f3f3f%3A0x6a0ef84f87355f51!2sRegina%2C%20SK!5e0!3m2!1sen!2sca!4v1720364567890!5m2!1sen!2sca"
-              ></iframe>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">2248 Osler Street, Regina SK</p>
-          </div>
+         <div className="w-full lg:w-1/3 bg-white">
+  <h3 className="text-xl font-semibold mb-4 text-gray-800">Your Location</h3>
 
-          {/* Order History */}
-          <div className="w-full lg:w-1/3 bg-white">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Order History</h2>
-            {visibleOrders.map((order, index) => (
-              <div
-                key={index}
-                className="bg-gray-50 border rounded-xl p-4 flex items-center justify-between mb-3 transition hover:shadow"
-              >
-                <div>
-                  <p className="font-medium text-gray-800">{order.name}</p>
-                  <p className="text-sm text-gray-500">{order.address}</p>
-                </div>
-                <span
-                  className={`text-xs font-medium px-3 py-1 rounded-full ${
-                    order.status === "Completed"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
-                  }`}
-                >
-                  {order.status}
-                </span>
-              </div>
-            ))}
+  <div className="w-full rounded-xl overflow-hidden">
+    <iframe
+      title="User Location"
+      width="100%"
+      height="220"
+      className="rounded-xl"
+      loading="lazy"
+      allowFullScreen
+      referrerPolicy="no-referrer-when-downgrade"
+      src={
+        user?.city
+          ? `https://www.google.com/maps?q=${encodeURIComponent(
+              user.city
+            )}&output=embed`
+          : "https://www.google.com/maps?q=Regina,+SK&output=embed" // fallback
+      }
+    ></iframe>
+  </div>
 
-            {orderHistory.length > 3 && (
-              <button
-                onClick={() => setShowAll(!showAll)}
-                className="text-blue-600 hover:underline text-sm mt-2"
-              >
-                {showAll ? "See Less" : "See More"}
-              </button>
-            )}
-          </div>
+  <p className="text-sm text-gray-500 mt-2">
+    {user?.city ? user.city : "Regina, SK"}
+  </p>
+</div>
+
+
+        {/* Order History */}
+<div className="w-full lg:w-1/3">
+  <CustomerRides />
+</div>
+
 
           {/* Ride Summary */}
-          <div className="w-full lg:w-1/3 bg-white">
-            <h2 className="text-xl font-semibold mb-6 text-gray-800">Your Ride Summary</h2>
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="bg-blue-50 rounded-xl p-4 shadow-sm hover:bg-blue-100 transition">
-                <p className="text-sm text-gray-500">Total Rides</p>
-                <p className="text-2xl font-bold text-blue-600">84</p>
-              </div>
-              <div className="bg-green-50 rounded-xl p-4 shadow-sm hover:bg-green-100 transition">
-                <p className="text-sm text-gray-500">Total Distance</p>
-                <p className="text-2xl font-bold text-green-600">215 km</p>
-              </div>
-              <div className="bg-gray-100 rounded-xl p-4 shadow-sm hover:bg-gray-200 transition">
-                <p className="text-sm text-gray-500">Last Ride</p>
-                <p className="text-xl font-bold text-gray-700">Aug 2, 2025</p>
-              </div>
-              <div className="bg-green-50 rounded-xl p-4 shadow-sm hover:bg-green-100 transition">
-                <p className="text-sm text-gray-500">Total Cancelled</p>
-                <p className="text-2xl font-bold text-red-600">0</p>
-              </div>
-            </div>
-          </div>
+<div className="w-full lg:w-1/3">
+  <RideSummary />
+</div>
         </div>
       ) : (
         // Not logged-in view

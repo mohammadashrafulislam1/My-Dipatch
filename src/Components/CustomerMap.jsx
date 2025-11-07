@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import mapboxgl from "mapbox-gl";
 import useAuth from "./useAuth";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { endPoint } from "./ForAPIs";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -20,7 +21,6 @@ export default function CustomerMap() {
   const [routeGeometry, setRouteGeometry] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(13);
   const [currentTime, setCurrentTime] = useState(new Date());
-
   // 🕒 live clock update
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -58,7 +58,7 @@ export default function CustomerMap() {
     const fetchAndFilterRides = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://my-dipatch-backend.onrender.com/api/rides`);
+        const response = await fetch(`${endPoint}/rides`);
         
         if (response.ok) {
           const responseData = await response.json();
