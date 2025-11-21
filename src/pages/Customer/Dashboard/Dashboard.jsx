@@ -31,14 +31,8 @@ import { VscSignOut } from "react-icons/vsc";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import BottomNavigation from "../../../Components/BottomNavigation";
 import useAuth from "../../../Components/useAuth";
-
-const notifications = [
-  { id: 1, text: "You have a new message from Alex.", timeAgo: "2h ago" },
-  { id: 2, text: "New comment on your post.", timeAgo: "3h ago" },
-  { id: 3, text: "System update completed.", timeAgo: "6h ago" },
-  { id: 4, text: "Your password was changed.", timeAgo: "Yesterday" },
-  { id: 5, text: "Weekly summary is ready.", timeAgo: "2 days ago" },
-];
+import NotificationComp from "../../../Components/Notifications";
+import { useNotification } from "../../../Components/NotificationContext";
 
 
 const messages = [
@@ -56,7 +50,8 @@ const Dashboard = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const {user, logout} = useAuth();
-  
+  const { notifications } = useNotification();
+
   const pageTitles = {
     "/dashboard": "Dashboard",
     "/dashboard/orders": "Order Lists",
@@ -147,17 +142,7 @@ const handleLogout = async () => {
       <h3 className="text-base font-semibold text-gray-800">Notifications</h3>
     </div>
 
-    <ul className="max-h-64 overflow-y-auto">
-      {notifications.slice(0, 5).map((note) => (
-        <li key={note.id} className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b">
-          <div className="h-2 w-2 mt-2 rounded-full bg-blue-500 shrink-0"></div>
-          <div className="text-sm text-gray-700 leading-tight">
-            <p>{note.text}</p>
-            <span className="text-xs text-gray-400">{note.timeAgo || "Just now"}</span>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <NotificationComp/>
 
     <button
       onClick={() => {
@@ -257,7 +242,7 @@ const handleLogout = async () => {
           }} >
               <FiBell className="text-xl cursor-pointer text-[#006FFF]" />
               <div className="bg-[#006FFF] text-white poppins-light text-[10px] px-1 rounded-full absolute top-[-7px] right-[-7px] border-[#fff] border-2">
-                0
+               {notifications?.length}
               </div>
             </div>
             <div className="bg-[#006eff2a] w-[36px] h-[36px] flex items-center justify-center rounded-lg relative"

@@ -2,20 +2,23 @@ import React, { useState, useEffect } from "react";
 import { FaHeadset, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import axios from "axios";
 import { endPoint } from "../../../Components/ForAPIs";
+import useAuth from "../../../Components/useAuth";
 
 const Support = () => {
   const [issue, setIssue] = useState("");
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const {user} = useAuth()
   // ✅ Fetch tickets on load
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const res = await axios.get(`${endPoint}/support`, {
-          withCredentials: true, // if using cookies for auth
-        });
-        setTickets(res.data);
+       const res = await axios.get(`${endPoint}/support/driver`, {
+  headers: {
+    Authorization: `Bearer ${user?.token}`,
+  },
+});
+        setTickets(res.data.tickets || []);
       } catch (err) {
         console.error(err);
       }
@@ -31,16 +34,22 @@ const Support = () => {
     setLoading(true);
     try {
       await axios.post(
-        `${endPoint}/support/ticket`,
+        `${endPoint}/support/ticket/driver`,
         { issue },
-        { withCredentials: true }
+        {
+  headers: {
+    Authorization: `Bearer ${user?.token}`,
+  },
+}
       );
       setIssue("");
       // Refresh tickets
-      const res = await axios.get(`${endPoint}/support`, {
-        withCredentials: true,
-      });
-      setTickets(res.data);
+      const res = await axios.get(`${endPoint}/support/driver`, {
+  headers: {
+    Authorization: `Bearer ${user?.token}`,
+  },
+});
+      setTickets(res.data.tickets || []);
     } catch (err) {
       console.error(err);
     } finally {
