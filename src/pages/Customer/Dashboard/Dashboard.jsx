@@ -36,7 +36,7 @@ import { useNotification } from "../../../Components/NotificationContext";
 
 
 const messages = [
-  { id: 1, name: "John Doe", online: true },
+  { id: 1, name: "{user?.firstName} {user?.lastName}", online: true },
   { id: 2, name: "Jane Smith", online: false },
   { id: 3, name: "Mike Johnson", online: true },
 ];
@@ -51,6 +51,8 @@ const Dashboard = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const {user, logout} = useAuth();
   const { notifications } = useNotification();
+
+  console.log(user)
 
   const pageTitles = {
     "/dashboard": "Dashboard",
@@ -229,8 +231,8 @@ const handleLogout = async () => {
       {/* Content Area */}
       <div className="flex-1 lg:ml-72 min-h-screen bg-[#FDFDFD] overflow-hidden">
         {/* Topbar */}
-        <div className="absolute md:ml-6 ml-12 mr-2 fixed md:bg-[#FDFDFD] top-6 md:top-0 left-0 right-0 h-14 
-        flex flex-col-reverse md:flex-row md:items-center items-end justify-between lg:px-6 md:pr-3 md:pl-14 lg:pl-0 z-10 lg:left-72">
+        <div className="absolute mr-2 fixed md:bg-[#FDFDFD] top-6 md:top-0 left-0 right-0 h-14 
+        flex flex-col-reverse md:flex-row md:items-center items-end justify-between lg:px-6 md:pr-3 md:pl-14 lg:pl-6 z-10 lg:left-72">
           <h1 className="text-xl font-semibold text-gray-800 md:mt-0 mt-2">{currentTitle}</h1>
           <div className="flex items-center md:gap-4 text-gray-600">
            <div className="flex gap-4">
@@ -270,25 +272,32 @@ const handleLogout = async () => {
            </div>
             <div className="divider lg:divider-horizontal mx-0 my-0 block md:hidden"></div>
             <div className="md:flex items-center gap-2 hidden">
-              <span className="text-sm font-medium">John Doe</span>
-              <div className="avatar avatar-online">
+              <span className="text-sm font-medium">{user?.firstName} {user?.lastName}</span>
+              <div className="avatar w-10 h-10 avatar-online">
                 <img
-                  src="https://i.pravatar.cc/40"
-                  alt="avatar"
-                  className="w-8 h-8 rounded-full "
-                />
+  src={
+    user?.profileImage 
+      || "https://static.vecteezy.com/system/resources/previews/036/280/650/large_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+  }
+  alt="avatar"
+  className="w-8 h-8 rounded-full"
+/>
+
               </div>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2 md:hidden mt-3 pl-5">
-              <span className="text-sm font-medium">John Doe</span>
-              <div className="avatar avatar-online">
+              <span className="text-sm font-medium">{user?.firstName} {user?.lastName}</span>
+              <div className="avatar avatar-online w-10 h-10">
                 <img
-                  src="https://i.pravatar.cc/40"
-                  alt="avatar"
-                  className="w-8 h-8 rounded-full "
-                />
+  src={
+    user?.profileImage 
+      || "https://static.vecteezy.com/system/resources/previews/036/280/650/large_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+  }
+  alt="avatar"
+  className="w-8 h-8 rounded-full"
+/>
               </div>
             </div>
       
