@@ -1,5 +1,5 @@
-import { useNotification } from "./NotificationContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { FiBell } from "react-icons/fi";
 import io from "socket.io-client";
 import useAuth from "./useAuth";
 
@@ -7,9 +7,33 @@ const socket = io("https://my-dipatch-backend.onrender.com", {
   transports: ["websocket"],
 });
 
-const NotificationComp = () => {
+const NotificationComp = ({ onCountChange = () => {} }) => {
   const { user } = useAuth();
-  const { notifications, addNotification } = useNotification();
+  const [notifications, setNotifications] = useState([]);
+
+  const addNotif = (text) => {
+    setNotifications((prev) => {
+      const updated = [
+        { id: Date.now(), text, time: new Date().toISOString() },
+        ...prev,
+      ];
+      onCountChange(updated.length);  // 🔥 Update count in Dashboard
+      return updated;
+    });
+  };
+
+  const timeAgo = (timeString) => {
+    const diff = (Date.now() - new Date(timeString)) / 1000;
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return Math.floor(diff / 60) + " min ago";
+    if (diff < 86400) return Math.floor(diff / 3600) + " hr ago";
+    return Math.floor(diff / 86400) + " days ago";
+  };
+
+  // 🔥 Keep count always in sync
+  useEffect(() => {
+    onCountChange(notifications.length);
+  }, [notifications]);
 
   useEffect(() => {
     if (!user?._id) return;
@@ -19,15 +43,15 @@ const NotificationComp = () => {
     });
 
     socket.on("new-ride-request", (ride) => {
-      addNotification(`New ride request from ${ride.pickup?.address}`);
+      addNotif(`New ride request from ${ride.pickup?.address}`);
     });
 
     socket.on("ride-accepted", () => {
-      addNotification("Your ride has been accepted.");
+      addNotif("Your ride has been accepted.");
     });
 
     socket.on("driver-location-update", ({ location }) => {
-      addNotification(
+      addNotif(
         `Driver moved to (${location.lat.toFixed(4)}, ${location.lng.toFixed(
           4
         )})`
@@ -35,7 +59,7 @@ const NotificationComp = () => {
     });
 
     socket.on("driver-location-disconnected", () => {
-      addNotification("Driver went offline.");
+      addNotif("Driver went offline.");
     });
 
     return () => {
@@ -47,20 +71,24 @@ const NotificationComp = () => {
   }, [user]);
 
   return (
-    <ul className="max-h-72 overflow-y-auto">
-      {notifications.slice(0, 5).map((note) => (
-        <li
-          key={note.id}
-          className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b"
-        >
-          <div className="h-2 w-2 mt-2 rounded-full bg-blue-500 shrink-0"></div>
-          <div className="text-sm text-gray-700 leading-tight">
-            <p>{note.text}</p>
-            <span className="text-xs text-gray-400">Just now</span>
+    <div className="p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <FiBell className="text-2xl text-blue-600" />
+        <h2 className="text-2xl font-semibold text-gray-800">Notifications</h2>
+      </div>
+
+      <div className="space-y-4">
+        {notifications.map((note) => (
+          <div
+            key={note.id}
+            className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md"
+          >
+            <p className="text-gray-800 text-sm">{note.text}</p>
+            <span className="text-xs text-gray-400">{timeAgo(note.time)}</span>
           </div>
-        </li>
-      ))}
-    </ul>
+        ))}
+      </div>
+    </div>
   );
 };
 
