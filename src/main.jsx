@@ -23,6 +23,7 @@ import RideStatusProvider from './Components/RideStatusProvider.jsx';
 import { NotificationProvider } from './Components/NotificationContext.jsx';
 import { ActiveRideProvider } from './contexts/ActiveRideContext.jsx';
 import ReviewPrompt from './Components/ReviewPrompt.jsx';
+import { Toaster } from 'react-hot-toast';
 
 
 
@@ -32,6 +33,8 @@ createRoot(document.getElementById('root')).render(
    <AuthProvider>
      <RideStatusProvider> {/* Wrap with RideStatusProvider */}
       <ActiveRideProvider>
+            {/* Toast notifications */}
+            <Toaster position="bottom-center" reverseOrder={false} />
             <ReviewPrompt endPoint={import.meta.env.VITE_ENDPOINT} />
       <RouterProvider router={router}> </RouterProvider></ActiveRideProvider>
       </RideStatusProvider>

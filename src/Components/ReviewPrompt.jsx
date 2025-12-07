@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import ReviewModal from "./ReviewModal";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const ReviewPrompt = ({ endPoint }) => {
   const { user, token } = useAuth();
@@ -54,25 +55,40 @@ const ReviewPrompt = ({ endPoint }) => {
   }, [user]);
 
   const handleSubmitReview = async ({ rideId, rating, comment }) => {
-    try {
-        console.log(rideId, rating, comment)
-      const res = await fetch(`${endPoint}/review`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rideId, rating, comment })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert("Review submitted!");
-        setRideToReview(null);
-      } else {
-        alert(data.message);
+  try {
+    const res = await axios.post(
+      `${endPoint}/review`,
+      { rideId, rating, comment },
+      {
+        headers: { Authorization: `Bearer ${token}` }
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    );
 
+    if (res.status === 201) {
+      toast.success("Review submitted!", {
+        position: "bottom-center",
+        duration: 3000,
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setRideToReview(null);
+    } else {
+      toast.error(res.data.message || "Failed to submit review", {
+        position: "bottom-center",
+        duration: 3000,
+      });
+    }
+  } catch (err) {
+    console.error("Error submitting review:", err);
+    toast.error(err.response?.data?.message || "Server error", {
+      position: "bottom-center",
+      duration: 3000,
+    });
+  }
+};
   return rideToReview ? (
     <ReviewModal
       ride={rideToReview}
