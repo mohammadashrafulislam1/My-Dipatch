@@ -12,7 +12,7 @@ const RideSummary = () => {
       try {
         const response = await fetch(`${endPoint}/rides`);
         const data = await response.json();
-        console.log(data)
+        // console.log(data)
         const userRides = data.rides.filter((r) => r.customerId === user._id);
         setRides(userRides);
       } catch (err) {

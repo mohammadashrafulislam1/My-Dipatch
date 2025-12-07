@@ -69,7 +69,7 @@ const CustomerChat = () => {
           console.log("Chat activeRide:", activeRide);
   
           const chatRes = await axios.get(`${endPoint}/chat/customer/${activeRide._id}`, { withCredentials: true });
-          console.log("Chat response:", chatRes);
+         
           setMessages(chatRes.data.messages || []);
         } else {
           setRide(null);

@@ -86,8 +86,8 @@ const Support = () => {
           </p>
         </div>
 
-        {/* Submit Ticket */}
-        <div className="mb-10">
+        {/* Submit Ticket hidden*/}
+        <div className="mb-10 hidden">
           <h2 className="text-lg font-semibold mb-4">Submit a Support Ticket</h2>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
@@ -109,8 +109,8 @@ const Support = () => {
           </form>
         </div>
 
-        {/* Tickets List */}
-        <div>
+        {/* Tickets List hidden*/}
+        <div className="mb-10 hidden">
           <h2 className="text-lg font-semibold mb-4">Your Tickets</h2>
 
           {tickets.length === 0 ? (
@@ -145,24 +145,40 @@ const Support = () => {
             </div>
           )}
         </div>
+{/* FAQ Section */}
+<div className="mt-10">
+  {/* Title */}
+  <div className="flex items-center gap-2 mb-4">
+    <div className="w-1.5 h-6 bg-blue-500 rounded-md"></div>
+    <h2 className="text-xl font-bold text-gray-800">
+      Frequently Asked Questions
+    </h2>
+  </div>
 
-        {/* FAQ Section */}
-        <div className="mt-10">
-          <h2 className="text-lg font-semibold mb-4">Frequently Asked Questions</h2>
+  {faqList.length === 0 ? (
+    <p className="text-gray-500 text-sm">No FAQs available.</p>
+  ) : (
+    <div className="space-y-4">
+      {faqList.map((faq) => (
+        <div
+          key={faq._id}
+          className="p-5 rounded-xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all"
+        >
+          {/* Question */}
+          <p className="font-semibold text-gray-900 text-base mb-1">
+            {faq.question}
+          </p>
 
-          {faqList.length === 0 ? (
-            <p className="text-gray-500 text-sm">No FAQs available.</p>
-          ) : (
-            <div className="space-y-4">
-              {faqList.map((faq) => (
-                <div key={faq._id} className="border-b pb-4">
-                  <p className="font-medium">{faq.question}</p>
-                  <p className="text-gray-600 text-sm">{faq.answer}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Answer */}
+          <p className="text-gray-600 text-sm leading-relaxed">
+            {faq.answer}
+          </p>
         </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
       </div>
     </div>
