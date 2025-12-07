@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import ReviewModal from "./ReviewModal";
+import axios from "axios";
 
 const ReviewPrompt = ({ endPoint }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [rideToReview, setRideToReview] = useState(null);
 
   useEffect(() => {
@@ -23,9 +24,9 @@ const ReviewPrompt = ({ endPoint }) => {
 
   const dropoffAt = ride.timestamps?.dropoffAt ? new Date(ride.timestamps.dropoffAt) : null;
   if (!dropoffAt) return false;
-        console.log("review dropoffAt", dropoffAt)
 
   const hoursSinceDropoff = (new Date() - dropoffAt) / 1000 / 3600;
+
   if (hoursSinceDropoff > 24) return false;
 
   return true;
@@ -33,10 +34,15 @@ const ReviewPrompt = ({ endPoint }) => {
 
 
         if (pendingRide) {
+            
           // Check if review already exists
-          const reviewRes = await fetch(`${endPoint}/review/check/${pendingRide._id}`);
-          const reviewData = await reviewRes.json();
+          const reviewRes = await axios.get(`${endPoint}/review/check/${pendingRide._id}`,{
+        headers: { Authorization: `Bearer ${token}` }
+      });
+          
+          const reviewData = await reviewRes.data;
           console.log(reviewRes)
+          
           if (!reviewData.exists) setRideToReview(pendingRide);
         }
       } catch (err) {
@@ -49,7 +55,8 @@ const ReviewPrompt = ({ endPoint }) => {
 
   const handleSubmitReview = async ({ rideId, rating, comment }) => {
     try {
-      const res = await fetch(`${endPoint}/reviews`, {
+        console.log(rideId, rating, comment)
+      const res = await fetch(`${endPoint}/review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rideId, rating, comment })
