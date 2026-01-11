@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Autocomplete } from "@react-google-maps/api";
 import useAuth from "./useAuth.js";
 import toast, { Toaster } from "react-hot-toast";
+import SquarePaymentForm from "./Payment/SquarePaymentForm.jsx";
 
 export default function RideRequestForm() {
   const { user } = useAuth();
@@ -17,6 +18,8 @@ export default function RideRequestForm() {
   const [midwayStops, setMidwayStops] = useState([]);
   const [instructions, setInstructions] = useState("");
   const [price, setPrice] = useState(0);
+const [pendingRide, setPendingRide] = useState(null);
+const [showPayment, setShowPayment] = useState(false);
 
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -42,19 +45,36 @@ export default function RideRequestForm() {
   };
 
   const calculatePrice = async () => {
-    if (!pickup.lat || !dropoff.lat) return;
-    try {
-      const res = await axios.post(`${endPoint}/rides/calculate-fare`, {
-        pickup,
-        dropoff,
-        midwayStops,
-      });
-      setPrice(res.data.customerFare);
-    } catch (err) {
-      console.log("Price calc error:", err);
-    }
-  };
+  // Make sure pickup & dropoff are valid
+  if (!pickup.lat || !pickup.lng || !dropoff.lat || !dropoff.lng) return;
 
+  // Filter out invalid midway stops (lat/lng = 0)
+  const validStops = midwayStops.filter(stop => stop.lat && stop.lng);
+
+  try {
+    const res = await axios.post(`${endPoint}/rides/calculate-fare`, {
+      pickup,
+      dropoff,
+      midwayStops: validStops,
+    });
+
+    console.log("Fare API Response:", res.data);
+
+    // Only update if customerFare exists
+    if (res.data?.customerFare) {
+      setPrice(res.data.customerFare);
+    }
+  } catch (err) {
+    console.log("Price calc error:", err);
+    // Optional: show a toast
+    toast.error(err.response?.data?.message || "Price calculation failed");
+  }
+};
+
+useEffect(() => {
+  console.log("Pickup:", pickup, "Dropoff:", dropoff, "Midway:", midwayStops);
+  calculatePrice();
+}, [pickup, dropoff, midwayStops]);
   useEffect(() => {
     calculatePrice();
   }, [pickup, dropoff, midwayStops]);
@@ -73,67 +93,50 @@ export default function RideRequestForm() {
 
   // 🔥 Final Submit
   const confirmSubmit = async () => {
-    try {
-      await axios.post(`${endPoint}/rides/request`, {
-        customerId,
-        pickup,
-        dropoff,
-        midwayStops,
-        instructions,
-        price: parseFloat(price) || 0,
-      });
+  if (!customerId) return;
 
-      toast.success("🚗 Ride Request Submitted Successfully!", {
-        style: {
-          background: "#0B8A00",
-          color: "white",
-          fontWeight: "bold",
-          padding: "14px",
-          borderRadius: "10px",
-          fontSize: "18px",
-        },
-        duration: 3000,
-      });
-
-      setShowConfirm(false);
-
-      // 🔥 Reset state completely
-      setPickup({ address: "", lat: 0, lng: 0 });
-      setDropoff({ address: "", lat: 0, lng: 0 });
-      setMidwayStops([]);
-      setInstructions("");
-      setPrice(0);
-
-      // 🔥 Trigger Autocomplete full reset by remounting
-      setPickupKey((prev) => prev + 1);
-      setDropoffKey((prev) => prev + 1);
-      setMidwayKeys([]);
-
-    } catch (err) {
-      toast.error("Failed to request ride.");
-      console.error("Ride request error:", err);
-    }
-  };
-
-  const handlePickupChange = () => {
-    const place = pickupRef.current.getPlace();
-    if (!place?.geometry) return;
-    setPickup({
-      address: place.formatted_address,
-      lat: place.geometry.location.lat(),
-      lng: place.geometry.location.lng(),
+  try {
+    const res = await axios.post(`${endPoint}/rides/request`, {
+      customerId,
+      pickup,
+      dropoff,
+      midwayStops,
+      instructions,
     });
-  };
 
-  const handleDropoffChange = () => {
-    const place = dropoffRef.current.getPlace();
-    if (!place?.geometry) return;
-    setDropoff({
-      address: place.formatted_address,
-      lat: place.geometry.location.lat(),
-      lng: place.geometry.location.lng(),
-    });
-  };
+    const createdRide = res.data.ride;
+
+    setPendingRide(createdRide);   // ✅ real ride with _id
+    setShowConfirm(false);
+    setShowPayment(true);
+
+  } catch (err) {
+    toast.error("Failed to create ride");
+  }
+};
+
+ const handlePickupChange = () => {
+  const place = pickupRef.current.getPlace();
+  if (!place?.geometry?.location) return;
+
+  setPickup({
+    address: place.formatted_address || "",
+    lat: place.geometry.location.lat(),
+    lng: place.geometry.location.lng(),
+  });
+};
+
+const handleDropoffChange = () => {
+  const place = dropoffRef.current.getPlace();
+  if (!place?.geometry?.location) return;
+
+  setDropoff({
+    address: place.formatted_address || "",
+    lat: place.geometry.location.lat(),
+    lng: place.geometry.location.lng(),
+  });
+};
+
 
   const handleMidwayChange = (index) => {
     const place = midwayRefs.current[index].getPlace();
@@ -274,6 +277,62 @@ export default function RideRequestForm() {
           </div>
         </div>
       )}
+ {showPayment && (
+  <div className="mt-10 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000] overflow-y-auto">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md relative max-h-[90vh] overflow-y-auto p-6">
+      
+      {/* Close Button */}
+<button
+  onClick={async () => {
+    // If there is a pending ride, delete it before closing
+    if (pendingRide?._id) {
+      try {
+        await axios.delete(`${endPoint}/rides/${pendingRide._id}`);
+        toast.success("Ride cancelled successfully");
+      } catch (err) {
+        console.error("Failed to cancel ride:", err);
+        toast.error("Failed to cancel ride");
+      }
+    }
+
+    // Close modal and reset pending ride
+    setShowPayment(false);
+    setPendingRide(null);
+  }}
+  className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white text-2xl font-bold"
+>
+  &times;
+</button>
+
+
+      <SquarePaymentForm
+         rideId={pendingRide?._id}
+        amount={price}
+        driverEarning={price * 0.8}
+        adminCut={price * 0.2}
+        customerId={customerId}
+        onCancel={() => setShowPayment(false)}
+        onPaymentError={() => toast.error("Payment failed")}
+        onPaymentSuccess={async () => {
+          try {
+            toast.success("🚗 Ride booked & paid successfully!");
+            setShowPayment(false);
+
+            // Reset form
+            setPickup({ address: "", lat: 0, lng: 0 });
+            setDropoff({ address: "", lat: 0, lng: 0 });
+            setMidwayStops([]);
+            setInstructions("");
+            setPrice(0);
+          } catch (err) {
+            toast.error("Payment done, but ride creation failed!");
+          }
+        }}
+      />
+    </div>
+  </div>
+)}
+
     </>
   );
 }

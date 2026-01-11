@@ -221,6 +221,10 @@ html.dark textarea {
 .animate-progress {
   animation: progress 2s ease-in-out infinite;
 }
+#card-container .sq-postal-code {
+  display: none !important;
+}
+
 
 /* Ride Request End*/
 
