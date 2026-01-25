@@ -57,7 +57,7 @@ export const PageNav = () => {
 
   const profileMenuItems = [
     { path: "/dashboard/profile", label: "Manage Account", icon: <FaUser /> },
-    { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
+    { path: "/", label: "New Task", icon: <FaPencil /> },
     { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
     { path: "/dashboard/settings", label: "Settings", icon: <FiSettings /> }
   ];
@@ -225,7 +225,9 @@ export const PageNav = () => {
               onClick={() => navigate("/account")}
             >
               <img
-                src="https://i.pravatar.cc/40"
+                src={user?.profileImage ||
+                    "https://static.vecteezy.com/system/resources/previews/036/280/650/large_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                  }
                 alt="avatar"
                 className="w-8 h-8 rounded-full border-2 border-[#006FFF]"
               />

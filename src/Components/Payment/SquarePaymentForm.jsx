@@ -16,7 +16,9 @@ const SquarePaymentForm = ({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [sdkLoaded, setSdkLoaded] = useState(false);
-  const {token} = useAuth();
+  const {token, user} = useAuth();
+const [useSavedAddress, setUseSavedAddress] = useState(false);
+
   console.log(rideId)
   const [billing, setBilling] = useState({
     cardholderName: "",
@@ -32,6 +34,55 @@ const SquarePaymentForm = ({
 
   const cardRef = useRef(null);
   const paymentsRef = useRef(null);
+useEffect(() => {
+  if (!user) return;
+
+  const hasBilling =
+    user.billingAddress &&
+    user.billingAddress.addressLine1;
+
+  if (hasBilling) {
+    setBilling(prev => ({
+      ...prev,
+      ...user.billingAddress,
+      email: user.email || "",
+      phone: user.phone || "",
+      cardholderName:
+        `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+        user.billingAddress.cardholderName ||
+        "Customer",
+    }));
+    setUseSavedAddress(true);
+  } else {
+    setBilling(prev => ({
+      ...prev,
+      email: user.email || "",
+      phone: user.phone || "",
+    }));
+    setUseSavedAddress(false);
+  }
+}, [user]);
+
+
+  const saveBillingAddress = async () => {
+  await axios.put(
+    `${endPoint}/user/billing-address`,
+    {
+      cardholderName: billing.cardholderName,
+      addressLine1: billing.addressLine1,
+      addressLine2: billing.addressLine2,
+      city: billing.city,
+      province: billing.province,
+      postalCode: billing.postalCode,
+      country: billing.country,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 
   // Load Square SDK
   useEffect(() => {
@@ -139,7 +190,10 @@ const SquarePaymentForm = ({
     }
 
     // Validate required fields
-    const requiredFields = ['cardholderName', 'addressLine1', 'city', 'province', 'postalCode'];
+   const requiredFields = useSavedAddress
+  ? []
+  : ['cardholderName', 'addressLine1', 'city', 'province', 'postalCode'];
+
     const missingFields = requiredFields.filter(field => !billing[field]?.trim());
     
     if (missingFields.length > 0) {
@@ -158,6 +212,11 @@ const SquarePaymentForm = ({
         // Method 1: Try without verificationDetails
         tokenResult = await cardRef.current.tokenize();
         console.log("Tokenization without verificationDetails:", tokenResult);
+        // Save billing address if user edited it
+if (!useSavedAddress) {
+  await saveBillingAddress();
+}
+
       } catch (tokenError) {
         console.log("Tokenization without verificationDetails failed, trying with...");
         
@@ -184,14 +243,34 @@ const SquarePaymentForm = ({
           billingContact.phone = String(billing.phone.trim());
         }
 
-        const verificationDetails = {
-          amount: String(Number(amount).toFixed(2)),
-          currencyCode: "CAD",
-          intent: "CHARGE",
-          billingContact: billingContact,
-          customerInitiated: true,
-          sellerKeyedIn: false,
-        };
+        // Determine which billing info to use
+const billingInfoToUse = useSavedAddress ? {
+  ...user.billingAddress,
+  email: user.email,
+  phone: user.phone,
+  cardholderName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Customer",
+} : billing;
+
+// Create verificationDetails
+const verificationDetails = {
+  amount: String(Number(amount).toFixed(2)),
+  currencyCode: "CAD",
+  intent: "CHARGE",
+  billingContact: {
+    givenName: String(billingInfoToUse.cardholderName.split(' ')[0] || "Customer"),
+    familyName: String(billingInfoToUse.cardholderName.split(' ').slice(1).join(' ') || ""),
+    addressLines: [billingInfoToUse.addressLine1, billingInfoToUse.addressLine2].filter(Boolean),
+    city: String(billingInfoToUse.city),
+    state: String(billingInfoToUse.province),
+    postalCode: String(billingInfoToUse.postalCode).toUpperCase().replace(/\s/g, ''),
+    countryCode: String(billingInfoToUse.country || "CA"),
+    email: billingInfoToUse.email,
+    phone: billingInfoToUse.phone,
+  },
+  customerInitiated: true,
+  sellerKeyedIn: false,
+};
+
 
         console.log("Attempting with verificationDetails:", verificationDetails);
         
@@ -202,32 +281,42 @@ const SquarePaymentForm = ({
           verificationDetails: verificationDetailsPlain
         });
       }
-
+if (tokenResult.status === "OK" && !useSavedAddress) {
+  await saveBillingAddress();
+}
       // Check tokenization result
       if (tokenResult.status === "OK") {
         const cleanPostal = billing.postalCode.toUpperCase().replace(/\s/g, '');
         
         // Send to backend
-        const res = await axios.post(
+       const res = await axios.post(
   `${endPoint}/payment/process`,
   {
     cardToken: tokenResult.token,
-    rideId,                    // REQUIRED
-    customerId,                // REQUIRED
+    rideId,
+    customerId,
     totalAmount: Number(amount),
     driverAmount: Number(driverEarning),
     adminAmount: Number(adminCut),
+    billingAddress: {
+      cardholderName: billing.cardholderName,
+      addressLine1: billing.addressLine1,
+      addressLine2: billing.addressLine2,
+      city: billing.city,
+      province: billing.province,
+      postalCode: billing.postalCode,
+      country: billing.country,
+    },
   },
   {
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
     },
   }
 );
 
+onPaymentSuccess(res.data);
 
-        onPaymentSuccess(res.data);
       } else {
         console.error("Tokenization failed:", tokenResult.errors);
         throw new Error(tokenResult.errors?.[0]?.message || "Payment processing failed");
@@ -260,8 +349,52 @@ const SquarePaymentForm = ({
       <h3 className="font-bold text-xl mb-6 text-gray-800">
         Pay ${Number(amount).toFixed(2)} CAD
       </h3>
+{useSavedAddress && (
+  <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+    <h4 className="font-semibold text-gray-800 mb-2">Billing Address</h4>
+    <p className="text-sm text-gray-700">
+      {billing.cardholderName}<br />
+      {billing.addressLine1}{billing.addressLine2 && `, ${billing.addressLine2}`}<br />
+      {billing.city}, {billing.province} {billing.postalCode}<br />
+      {billing.country}
+    </p>
+
+    <div className="mt-3 flex gap-3">
+      {/* Change Address */}
+      <button
+        type="button"
+        onClick={() => setUseSavedAddress(false)}
+        className="text-sm text-orange-600 font-medium hover:underline"
+      >
+        Change billing address
+      </button>
+
+      {/* Use This Address */}
+      <button
+        type="button"
+        onClick={() => {
+          if (user.billingAddress) {
+            setBilling(prev => ({
+              ...prev,
+              ...user.billingAddress,
+              email: user.email || "",
+              phone: user.phone || "",
+              cardholderName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Customer",
+            }));
+            setUseSavedAddress(true);
+          }
+        }}
+        className="text-sm text-green-600 font-medium hover:underline"
+      >
+        Use this address
+      </button>
+    </div>
+  </div>
+)}
 
       <form onSubmit={handleSubmit}>
+        {!useSavedAddress && (
+  <>
         {/* Cardholder Name */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2 text-gray-700">
@@ -382,7 +515,7 @@ const SquarePaymentForm = ({
             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
-
+</>)}
         {/* Card Details */}
         <div className="mb-6">
           <label className="block text-sm font-medium mb-3 text-gray-700">

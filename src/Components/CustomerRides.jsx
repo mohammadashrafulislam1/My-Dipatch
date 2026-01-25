@@ -57,7 +57,7 @@ const CustomerRides = () => {
   }, [user]);
 
   if (loadError) return <p>Error loading maps</p>;
-  if (!isLoaded) return <p>Loading...</p>;
+  if (!isLoaded) return <p>It's Loading...</p>;
 
   // ✅ Show only first 3 if showAll = false
   const visibleRides = showAll ? rides : rides.slice(0, 3);

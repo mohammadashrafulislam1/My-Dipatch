@@ -6,13 +6,15 @@ import { FaPencil } from 'react-icons/fa6';
 import { FiHome } from 'react-icons/fi';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { NavLink, useNavigate } from 'react-router-dom';
+import useAuth from './useAuth';
 
 const BottomNavigation = () => {
   const [activeTab, setActiveTab] = useState('Account');
+  const { user, logout, loading } = useAuth();
   
   const navigate = useNavigate();
   const tabs = [
-    { path: "/landingpage", label: "New Task", icon: <FaPencil /> },
+    { path: "/", label: "New Task", icon: <FaPencil /> },
     { path: "/dashboard/orders", label: "Orders", icon: <RiMenuUnfold2Line /> },
     { path: "/dashboard/chat", label: "Chat", icon: <BsChatLeftDots /> },
     { path: "/dashboard/support", label: "Support", icon: <BiSupport /> },
@@ -44,7 +46,10 @@ const BottomNavigation = () => {
         onClick={() => navigate("/account")}
       >
         <img
-          src="https://i.pravatar.cc/40"
+          src={
+                    user?.profileImage ||
+                    "https://static.vecteezy.com/system/resources/previews/036/280/650/large_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                  }
           alt="avatar"
           className="w-8 h-8 rounded-full border-2 border-[#006FFF]"
         />

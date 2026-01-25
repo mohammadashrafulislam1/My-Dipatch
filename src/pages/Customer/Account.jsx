@@ -9,24 +9,45 @@ import {
   FiShoppingBag,
 } from 'react-icons/fi';
 import BottomNavigation from '../../Components/BottomNavigation';
-import { FaPencil } from 'react-icons/fa6';
+import { FaPencil, FaRegStar, FaStar } from 'react-icons/fa6';
 import { Link } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import useAuth from '../../Components/useAuth';
+import Rating from 'react-rating';
 
 const AccountPage = () => {
+  const { user, logout, loading } = useAuth();
+  const handleSignOut =()=>{
+    logout()
+  }
   return (
     <div className="max-w-md mx-auto bg-white text-gray-900 min-h-screen relative pb-20">
         
       {/* Header */}
       <div className="p-4 flex items-center justify-between border-b">
         <div>
-          <div className="text-3xl font-bold">MD ISLAM</div>
+          <div className="text-3xl font-bold">{
+                    user?.firstName} {user?.lastName}</div>
           <div className="flex items-center gap-1 mt-1 text-gray-500">
-            <span className="text-sm">⭐ 4.64</span>
+<div className="flex items-center gap-2">
+  <Rating
+    initialRating={user?.rating || 0}
+    readonly
+    emptySymbol={<FaRegStar className="text-gray-300 text-sm" />}
+    fullSymbol={<FaStar className="text-yellow-400 text-sm" />}
+  />
+  <span className="text-sm text-gray-600">
+    ({user?.rating})
+  </span>
+</div>
+
           </div>
         </div>
         <img
-          src="https://i.pravatar.cc/100"
+          src={
+                    user?.profileImage ||
+                    "https://static.vecteezy.com/system/resources/previews/036/280/650/large_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                  }
           alt="avatar"
           className="w-14 h-14 rounded-full border-2 border-gray-200"
         />
@@ -52,8 +73,8 @@ const AccountPage = () => {
         <OptionRow icon={<FiUser size={20} />} label="Profile"  path="/dashboard/profile"/>
         <OptionRow icon={<FiShoppingBag size={22} />} label="Orders" path="/dashboard/orders" />
         <OptionRow icon={<FiCreditCard size={22} />} label="Wallet"  path="/dashboard/wallet"/>
-        <OptionRow icon={<FaPencil size={20} />} label= "New Task" path="/landingpage"/>
-        <OptionRow icon={<FiLogOut size={20} />} label="Sign Out" />
+        <OptionRow icon={<FaPencil size={20} />} label= "New Task" path="/"/>
+        <OptionRow icon={<FiLogOut size={20} />} label="Sign Out" onClick={handleSignOut} />
       </div>
 
 
@@ -77,17 +98,37 @@ const ActionCard = ({ icon, label, badgeCount, path }) => (
  </NavLink>
 );
 
-const OptionRow = ({ icon, label, path }) => (
-  <NavLink to={path} className="flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-  <div >
-   
-    <div className="flex items-center gap-3">
-      {icon}
-      <span className="font-medium">{label}</span>
-    </div>
-    <i className="fas fa-chevron-right text-gray-400" />
-   
-  </div> </NavLink>
-);
+const OptionRow = ({ icon, label, path, onClick }) => {
+  // If it's a click action (like logout)
+  if (onClick) {
+    return (
+      <div
+        onClick={onClick}
+        className="flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition"
+      >
+        <div className="flex items-center gap-3">
+          {icon}
+          <span className="font-medium">{label}</span>
+        </div>
+        <i className="fas fa-chevron-right text-gray-400" />
+      </div>
+    );
+  }
+
+  // Otherwise normal navigation
+  return (
+    <NavLink
+      to={path}
+      className="flex items-center justify-between p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+    >
+      <div className="flex items-center gap-3">
+        {icon}
+        <span className="font-medium">{label}</span>
+      </div>
+      <i className="fas fa-chevron-right text-gray-400" />
+    </NavLink>
+  );
+};
+
 
 export default AccountPage;
