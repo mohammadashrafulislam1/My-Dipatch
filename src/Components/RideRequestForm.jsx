@@ -254,7 +254,7 @@ const handleDropoffChange = () => {
       {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
           <div className="bg-white rounded-lg p-6 w-80 text-center shadow-xl">
-            <h2 className="text-xl font-bold mb-3">Confirm Ride Request</h2>
+            <h2 className="text-xl text-black font-bold mb-3">Confirm Ride Request</h2>
             <p className="text-gray-700 mb-6">
               Are you sure you want to request this ride for <b>${price}</b>?
             </p>
@@ -262,7 +262,7 @@ const handleDropoffChange = () => {
             <div className="flex justify-between gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="w-1/2 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+                className="w-1/2 text-black py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
               >
                 Cancel
               </button>
@@ -279,7 +279,7 @@ const handleDropoffChange = () => {
       )}
  {showPayment && (
   <div className="mt-10 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000] overflow-y-auto">
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md relative max-h-[90vh] overflow-y-auto p-6">
+    <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-xl w-full max-w-md relative max-h-[90vh] overflow-y-auto p-6">
       
       {/* Close Button */}
 <button
