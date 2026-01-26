@@ -115,7 +115,7 @@ const OptionRow = ({ icon, label, path, onClick }) => {
     );
   }
 
-  // Otherwise normal navigation
+  // Otherwise it should be normal navigation
   return (
     <NavLink
       to={path}
