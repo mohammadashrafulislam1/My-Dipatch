@@ -345,7 +345,7 @@ onPaymentSuccess(res.data);
   };
 
   return (
-    <div className="">
+    <div className="bg-white">
       <h3 className="font-bold text-xl mb-6 text-gray-800">
         Pay ${Number(amount).toFixed(2)} CAD
       </h3>
