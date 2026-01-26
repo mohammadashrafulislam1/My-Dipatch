@@ -118,7 +118,7 @@ const LandingPage = () => {
         </div>
       ) : (
         // Not logged-in view
-<div className="mt-20 flex flex-col items-center text-center gap-8 w-[90%] mx-auto">
+<div className="mt-32 flex flex-col items-center text-center gap-8 w-[90%] mx-auto pb-4">
   {/* Map Preview */}
   <div className="w-full lg:w-3/4 h-64 rounded-2xl overflow-hidden shadow-lg relative">
     <iframe
@@ -179,7 +179,7 @@ const LandingPage = () => {
     </button>
     <button
       // onClick={() => navigate("/features")}
-      className="bg-white border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition"
+      className="bg-white text-black border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition"
     >
       Explore App
     </button>
