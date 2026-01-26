@@ -24,6 +24,9 @@ const CustomerChat = () => {
   const [driver, setDriver] = useState(null);
   const [activeChat, setActiveChat] = useState("driver"); // default selected participant
 const [adminIds, setAdminIds] = useState([]);
+const [showChat, setShowChat] = useState(false);
+
+const isMobile = useMemo(() => window.innerWidth < 768, []);
 
 useEffect(() => {
   const fetchSupportChat = async () => {
@@ -445,15 +448,20 @@ formData.append("clientMessageId", clientMessageId);
   };
 
   return (
-    <div className="flex md:mt-10 border border-1 h-[600px] max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="mt-10 border md:h-[600px] h-[400px] max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex">
       {/* Sidebar */}
-      <div className="w-1/3 border-r overflow-y-auto">
+      {(!isMobile || !showChat) && (
+
+      <div className="md:w-1/3 w-full border-r overflow-y-auto">
         <div className="p-4 font-semibold text-lg border-b">Chats</div>
 
 
         {/* Customer Service Demo */}
         <div
-          onClick={() => setActiveChat("cs")}
+          onClick={() => {
+  setActiveChat("cs");
+  if (isMobile) setShowChat(true);
+}}
           className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-200 transition-all mt-2 ${
             activeChat === "cs" ? "bg-gray-100" : ""
           }`}
@@ -474,7 +482,11 @@ formData.append("clientMessageId", clientMessageId);
         {/* Driver */}
         {driver && (
           <div
-            onClick={() => setActiveChat("driver")}
+            onClick={() => {
+  setActiveChat("driver");
+  if (isMobile) setShowChat(true);
+}}
+
             className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-200 transition-all ${
               activeChat === "driver" ? "bg-gray-100" : ""
             }`}
@@ -493,9 +505,27 @@ formData.append("clientMessageId", clientMessageId);
           </div>
         )}
       </div>
+  
+)}
 
       {/* Chat Window */}
+      {(!isMobile || showChat) && (
       <div className="flex-1 flex flex-col">
+        {isMobile && (
+  <div className="flex items-center gap-2 p-3 border-b">
+    <button
+      onClick={() => setShowChat(false)}
+      className="text-blue-600 font-medium"
+    >
+      ← Back
+    </button>
+    <span className="font-semibold">
+      {activeChat === "cs"
+        ? "Customer Service"
+        : `${driver?.firstName} ${driver?.lastName}`}
+    </span>
+  </div>
+)}
         {/* Ride status */}
         {rideStatus && (
           <div
@@ -599,7 +629,7 @@ formData.append("clientMessageId", clientMessageId);
             </div>
           </div>
         )}
-      </div>
+      </div>)}
     </div>
   );
 };
