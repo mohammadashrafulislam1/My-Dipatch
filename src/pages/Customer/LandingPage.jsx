@@ -12,7 +12,7 @@ import {
 import RideRequestForm from "../../Components/RideRequestForm";
 import useAuth from "../../Components/useAuth";
 import { PageNav } from "../../Components/PageNavigation";
-import { LoadScript, useLoadScript } from "@react-google-maps/api";
+import { LoadScript, useJsApiLoader, useLoadScript } from "@react-google-maps/api";
 import LoadingScreen from "../../Components/LoadingScreen";
 import ErrorPage from "../../Components/ErrorPage";
 import RideStatusIndicator from "../../Components/RideStatusIndicator";
@@ -24,7 +24,20 @@ const LandingPage = () => {
   console.log(user)
   const [midwayStops, setMidwayStops] = useState([""]);
 
-  
+
+function BookErrandWrapper() {
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
+    id: "google-maps-script", // important to prevent duplicates
+  });
+
+  if (loadError) return <p>Map failed to load</p>;
+  if (!isLoaded) return <p>Loading map...</p>;
+
+  return <RideRequestForm onSuccess={() => window.location.reload()} />;
+}
+
   return (
     <div className="overflow-x-hidden md:pb-0 pb-12">
       <PageNav/>
@@ -62,13 +75,7 @@ const LandingPage = () => {
             marginBottom: `-${150 - midwayStops.length * 30}px`, // increase bottom margin as stops grow
           }}>
       <h2 className="text-4xl font-bold poppins-semibold text-blue-900 mb-6 ">Book an Errand</h2>
-     <LoadScript
-  googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-  libraries={["places"]}
->
-  <RideRequestForm onSuccess={() => window.location.reload()} />
-</LoadScript>
-
+     <BookErrandWrapper />
     </div>
       </div>
 

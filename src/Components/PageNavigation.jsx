@@ -120,7 +120,6 @@ export const PageNav = () => {
                   <div className="text-sm font-semibold text-gray-900">
                     {user?.firstName} {user?.lastName}
                   </div>
-                  <div className="text-xs text-gray-500">Customer</div>
                 </div>
 
                 {showProfileDropdown ? (

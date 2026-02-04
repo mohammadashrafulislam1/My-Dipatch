@@ -278,7 +278,7 @@ const handleDropoffChange = () => {
         </div>
       )}
  {showPayment && (
-  <div className="mt-10 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000] overflow-y-auto">
+  <div className="md:mt-10 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000] overflow-y-auto">
     <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-xl w-full max-w-md relative max-h-[90vh] overflow-y-auto p-6">
       
       {/* Close Button */}
